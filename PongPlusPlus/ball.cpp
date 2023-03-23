@@ -10,12 +10,12 @@ Short circuits if any contacts
 bool Ball::checkContact(Paddle* paddle) {
 	// Check against top and bottom walls for bounces, short circuit if any contacts
 	if (position_y <= 0 || position_y >= WINDOW_HEIGHT) {
-		y_speed -= 2 * y_speed;
+		y_speed_ -= 2 * y_speed_;
 		playWallBounce();
 		return true;
 	}
 	// Check for collision against a paddle. Short circuit if paddle contacted to save processing
-	elif deflectFromPaddle(paddle) {
+	else if (deflectFromPaddle(paddle)) {
 		playPaddleHit();
 		return true;
 	}
@@ -30,22 +30,24 @@ Checks if the ball should deflect from a paddle using the following logic:
 */
 bool Ball::deflectFromPaddle(Paddle* paddle) {
 	// Calculate paddle boundaries
-	paddle_x_lim = paddle->pPlayer_->player_num == PlayerNum::kOne : paddle->position_x + (paddle->width / 2) ? paddle->position_x - (paddle->width / 2);
-	paddle_y_max = paddle->position_y + (paddle->height / 2);
-	paddle_y_min = paddle->position_y - (paddle->height / 2);
+	float paddle_y_max = paddle->position_y + (paddle->height / 2);
+	float paddle_y_min = paddle->position_y - (paddle->height / 2);
 
 	// TODO: Optimize these checks so that we don't have to test separately for kOne and kTwo
-	if paddle->pPlayer_->player_num == PlayerNum::kOne{
+	if (paddle->getPlayer()->player_num == PlayerNum::kOne) {
 		// Check boundaries against paddle one, then inverse x-speed
+		float paddle_x_lim = paddle->position_x + (paddle->width / 2);
+
 		if (position_y >= paddle_y_min && position_y <= paddle_y_max && position_x <= paddle_x_lim) {
-			x_speed -= 2 * x_speed;
+			x_speed_ -= 2 * x_speed_;
 			return true;
 		}
 	}
 	else {
+		float paddle_x_lim = paddle->position_x - (paddle->width / 2);
 		// Check boundaries against paddle two, then inverse x-speed
 		if (position_y >= paddle_y_min && position_y <= paddle_y_max && position_x >= paddle_x_lim) {
-			x_speed -= 2 * x_speed;
+			x_speed_ -= 2 * x_speed_;
 			return true;
 		}
 	}
@@ -59,17 +61,16 @@ Checks that the ball has passed a paddle without contact using the following log
 Assumes contact is always checked first!
 */
 bool Ball::checkWinningPosition(Paddle* paddle) {
-	// Calculate paddle x boundaries
-	paddle_x_lim = paddle->pPlayer_->player_num == PlayerNum::kOne : paddle->position_x - (paddle->width / 2) ? paddle->position_x + (paddle->width / 2);
-
 	// TODO: Optimize these checks so that we don't have to test separately for kOne and kTwo
-	if paddle->pPlayer_->player_num == PlayerNum::kOne{
+	if (paddle->getPlayer()->player_num == PlayerNum::kOne) {
+		float paddle_x_lim = paddle->position_x - (paddle->width / 2);
 		// Check boundaries against paddle one, then inverse x-speed
 		if (position_x < paddle_x_lim) {
 			return true;
 		}
 	}
 	else {
+		float paddle_x_lim = paddle->position_x + (paddle->width / 2);
 		// Check boundaries against paddle two, then inverse x-speed
 		if (position_x > paddle_x_lim) {
 			return true;
@@ -82,15 +83,15 @@ bool Ball::checkWinningPosition(Paddle* paddle) {
 Moves the ball, taking into consideration ball speed, potential direction changes from contact, and winning points
 */
 void Ball::moveBall() {
-	position_x += x_speed;
-	position_y += y_speed;
+	position_x += x_speed_;
+	position_y += y_speed_;
 	
 	for (auto paddle : paddles_) {
 		if (checkContact(paddle)) {
 			break;
 		}
-		elif(checkWinningPosition(paddle)) {
-			paddle->pPlayer_->points++;
+		else if(checkWinningPosition(paddle)) {
+			paddle->getPlayer()->points++;
 			break;
 		}
 	}

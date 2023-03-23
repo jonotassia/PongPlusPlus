@@ -5,24 +5,24 @@
 #include "render.h"
 
 Renderer::~Renderer() {
-	SDL_DestroyRenderer(pRrenderer_);
+	SDL_DestroyRenderer(pRenderer_);
 	SDL_DestroyWindow(pWindow_);
 	SDL_Quit();
 }
 
 void Renderer::setColorScheme() {
 	switch (pGame_->color_scheme_) {
-		case(PowerUps::kNone): SDL_SetRenderDrawColor(pRrenderer_, 0xFF, 0xFF, 0xFF, 0xFF); break;
-		case(PowerUps::kFire): SDL_SetRenderDrawColor(pRrenderer_, 0xFA, 0x8D, 0x22, 0xFF); break;
-		case(PowerUps::kIce): SDL_SetRenderDrawColor(pRrenderer_, 0x27, 0xB7, 0xDE, 0xFF); break;
-		case(PowerUps::kSun): SDL_SetRenderDrawColor(pRrenderer_, 0xF6, 0xFA, 0x17, 0xFF); break;
-		case(PowerUps::kShadow): SDL_SetRenderDrawColor(pRrenderer_, 0x67, 0x4E, 0xA7, 0xFF); break;
-		case(PowerUps::kSniper): SDL_SetRenderDrawColor(pRrenderer_, 0xF6, 0xFA, 0x17, 0xFF); break;
+		case(PowerUps::kNone): SDL_SetRenderDrawColor(pRenderer_, 0xFF, 0xFF, 0xFF, 0xFF); break;
+		case(PowerUps::kFire): SDL_SetRenderDrawColor(pRenderer_, 0xFA, 0x8D, 0x22, 0xFF); break;
+		case(PowerUps::kIce): SDL_SetRenderDrawColor(pRenderer_, 0x27, 0xB7, 0xDE, 0xFF); break;
+		case(PowerUps::kSun): SDL_SetRenderDrawColor(pRenderer_, 0xF6, 0xFA, 0x17, 0xFF); break;
+		case(PowerUps::kShadow): SDL_SetRenderDrawColor(pRenderer_, 0x67, 0x4E, 0xA7, 0xFF); break;
+		case(PowerUps::kSniper): SDL_SetRenderDrawColor(pRenderer_, 0xF6, 0xFA, 0x17, 0xFF); break;
 	}
 }
 
 void Renderer::drawNet() {
-	SDL_RenderDrawLine(pRrenderer_, WINDOW_WIDTH / 2, 0, WINDOW_WIDTH / 2, WINDOW_HEIGHT);
+	SDL_RenderDrawLine(pRenderer_, WINDOW_WIDTH / 2, 0, WINDOW_WIDTH / 2, WINDOW_HEIGHT);
 }
 
 void Renderer::drawScore() {
@@ -30,11 +30,34 @@ void Renderer::drawScore() {
 }
 
 void Renderer::drawBall() {
-	// TODO: Add facility to draw current location of ball
+	// Create SDL rectangle
+	SDL_Rect ball;
+	ball.x = pGame_->getBall()->position_x;
+	ball.y = pGame_->getBall()->position_y;
+	ball.w = pGame_->getBall()->width;
+	ball.h = pGame_->getBall()->height;
+
+	// Render a filled rectangle
+	SDL_RenderFillRect(pRenderer_, &ball);
 }
 
-void Renderer::drawPaddle() {
-	// TODO: Add facility to draw current location of paddle
+void Renderer::drawPaddles() {
+	// Create SDL rectangles for each paddle
+	SDL_Rect paddle_one;
+	paddle_one.x = pGame_->getPaddleOne()->position_x;
+	paddle_one.y = pGame_->getPaddleOne()->position_y;
+	paddle_one.w = pGame_->getPaddleOne()->width;
+	paddle_one.h = pGame_->getPaddleOne()->height;
+
+	SDL_Rect paddle_two;
+	paddle_two.x = pGame_->getPaddleTwo()->position_x;
+	paddle_two.y = pGame_->getPaddleTwo()->position_y;
+	paddle_two.w = pGame_->getPaddleTwo()->width;
+	paddle_two.h = pGame_->getPaddleTwo()->height;
+
+	// Render a filled rectangle
+	SDL_RenderFillRect(pRenderer_, &paddle_one);
+	SDL_RenderFillRect(pRenderer_, &paddle_two);
 }
 
 void Renderer::drawScreen() {

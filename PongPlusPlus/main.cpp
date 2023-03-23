@@ -12,7 +12,7 @@ int main(int argc, char *args[])
 	
 	// Initialize game components
 	Renderer renderer;
-	Game game(*renderer);
+	Game game(&renderer);
 
 	// Begin game loop
 	game.Run();

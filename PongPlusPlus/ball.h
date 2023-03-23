@@ -1,6 +1,8 @@
+#pragma once
 #include <vector>
 
 #include "game.h"
+#include "paddle.h"
 
 class Ball {
 public:
@@ -25,5 +27,5 @@ private:
 
 	// Linkages
 	Game* pGame_;
-	vector<Paddle*> paddles_ { pGame_->pPaddleOne_, pGame_->pPaddleTwo_ };
+	std::vector<Paddle*> paddles_ { pGame_->getPlayerOne(), pGame_->getPlayerTwo() };
 };

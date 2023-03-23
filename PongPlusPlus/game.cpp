@@ -1,6 +1,8 @@
+#include <SDL.h>
+
 #include "game.h"
 
-Game::Game(Renderer *pRenderer) : renderer(pRenderer) {
+Game::Game(Renderer* pRenderer) : pRenderer_(pRenderer) {
 	pRenderer->setGame(this);
 }
 
@@ -26,11 +28,25 @@ void Game::Run() {
 			}
 		}
 		// Update game objects and draw screen components
+		if (checkGameOver()) {
+			pRenderer_->drawVictoryScreen();
+			running = false;
+		}
 		this->Update();
-		pRenderer->drawScreen();
+		pRenderer_->drawScreen();
 	}
 }
 
 void Game::Update() {
-	// TODO: Ensure each game object is updated to reflect new values
+	// Move each object, ensuring the ball moves last to ensure that it can check for collisions
+	pPaddleOne_->movePaddle();
+	pPaddleTwo_->movePaddle();
+	pBall_->moveBall();
+}
+
+bool Game::checkGameOver() {
+	if (pPlayerOne_->points == 10 || pPlayerTwo_->points == 10) {
+		return true;
+	}
+	return false;
 }

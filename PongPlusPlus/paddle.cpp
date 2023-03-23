@@ -15,9 +15,9 @@ Paddle::Paddle(Player* player, float pos_x) {
 
 void Paddle::movePaddle() {
 	switch (direction_) {
-		case kUp:
+		case Direction::kUp:
 			position_y += speed;
-		case kDown:
+		case Direction::kDown:
 			position_y -= speed;
 	}
 }

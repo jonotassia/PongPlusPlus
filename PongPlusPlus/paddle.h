@@ -1,4 +1,7 @@
+#pragma once
+
 #include "player.h"
+#include "render.h"
 #include "game.h"
 
 class Paddle {
@@ -7,8 +10,8 @@ public:
 	Paddle(Player* pPlayer, float position_x);
 
 	// Getters/Setters
-	void setPlayer(Player* pPlayer) { pPlayer_ = pPlayer };
-	Player* getPlayer() { return pPlayer_ };
+	void setPlayer(Player* pPlayer) { pPlayer_ = pPlayer; };
+	Player* getPlayer() { return pPlayer_; };
 	
 	// Geometry
 	float position_x;  // X Location of central point

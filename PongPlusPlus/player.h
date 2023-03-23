@@ -1,3 +1,5 @@
+#pragma once
+
 enum class PlayerNum { kOne, kTwo };
 
 class Player {

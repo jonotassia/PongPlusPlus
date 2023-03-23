@@ -3,37 +3,20 @@
 #include <string>
 
 #include "render.h"
+#include "game.h"
 
 int main(int argc, char *args[])
 {
 	// Initialize SDL components
 	SDL_Init(SDL_INIT_VIDEO);
+	
+	// Initialize game components
 	Renderer renderer;
+	Game game(*renderer);
 
-	// Game logic
-	{
-		bool running = true;
+	// Begin game loop
+	game.Run();
 
-		// Continue looping and processing events until user exits
-		while (running)
-		{
-			SDL_Event event;
-			while (SDL_PollEvent(&event))
-			{
-				if (event.type == SDL_QUIT)
-				{
-					running = false;
-				}
-				else if (event.type == SDL_KEYDOWN)
-				{
-					if (event.key.keysym.sym == SDLK_ESCAPE)
-					{
-						running = false;
-					}
-				}
-			}
-			renderer.drawScreen();
-		}
-	}
+
 	return 0;
 }

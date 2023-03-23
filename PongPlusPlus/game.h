@@ -28,8 +28,8 @@ public:
 	Game(Renderer *pRenderer);
 
 	// Getters/Setters
-	Player* getPlayerOne() const { return pPlayerOne_.get(); };
-	Player* getPlayerTwo() const { return pPlayerTwo_.get(); };
+	Player* getPlayerOne() { return pPlayerOne_.get(); };
+	Player* getPlayerTwo() { return pPlayerTwo_.get(); };
 	Ball& getBall() { return ball; };
 	Paddle& getPaddleOne() { return paddle_one; };
 	Paddle& getPaddleTwo() { return paddle_two; };
@@ -51,8 +51,8 @@ private:
 	std::unique_ptr<Player> pPlayerTwo_ = std::make_unique<Player>(PlayerNum::kTwo);
 
 	// Game objects
-	Paddle paddle_one = Paddle(pPlayerOne_.get(), 20);
-	Paddle paddle_two = Paddle(pPlayerTwo_.get(), WINDOW_WIDTH - 20);
+	Paddle paddle_one = Paddle(getPlayerOne(), 20);
+	Paddle paddle_two = Paddle(getPlayerTwo(), WINDOW_WIDTH - 20);
 	Ball ball;
 };
 

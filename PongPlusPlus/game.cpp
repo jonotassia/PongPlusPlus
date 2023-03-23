@@ -39,9 +39,9 @@ void Game::Run() {
 
 void Game::Update() {
 	// Move each object, ensuring the ball moves last to ensure that it can check for collisions
-	pPaddleOne_->movePaddle();
-	pPaddleTwo_->movePaddle();
-	pBall_->moveBall();
+	paddle_one.movePaddle();
+	paddle_two.movePaddle();
+	ball.moveBall();
 }
 
 bool Game::checkGameOver() {

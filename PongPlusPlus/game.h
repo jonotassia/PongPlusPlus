@@ -25,14 +25,14 @@ enum class Direction {
 class Game {
 public:
 	// Constructor/destructor
-	Game(Renderer *renderer);
+	Game(Renderer *pRenderer);
 
 	// Getters/Setters
 	Player* getPlayerOne() const { return pPlayerOne_.get(); };
 	Player* getPlayerTwo() const { return pPlayerTwo_.get(); };
-	Ball* getBall() const { return pBall_; };
-	Paddle* getPaddleOne() const { return pPaddleOne_; };
-	Paddle* getPaddleTwo() const { return pPaddleTwo_; };
+	Ball& getBall() { return ball; };
+	Paddle& getPaddleOne() { return paddle_one; };
+	Paddle& getPaddleTwo() { return paddle_two; };
 	
 	// Proprietary functions
 	void Run();
@@ -51,9 +51,9 @@ private:
 	std::unique_ptr<Player> pPlayerTwo_ = std::make_unique<Player>(PlayerNum::kTwo);
 
 	// Game objects
-	Paddle* pPaddleOne_ = Paddle(pPlayerOne_.get(), 20);
-	Paddle* pPaddleTwo_ = Paddle(pPlayerTwo_.get(), WINDOW_WIDTH - 20);
-	Ball *pBall_;
+	Paddle paddle_one = Paddle(pPlayerOne_.get(), 20);
+	Paddle paddle_two = Paddle(pPlayerTwo_.get(), WINDOW_WIDTH - 20);
+	Ball ball;
 };
 
-// TODO: Create new session object to own paddles for each game
+// TODO: Create new session object to own paddles and balls for each game

@@ -4,7 +4,7 @@
 class Paddle {
 public:
 	// Constructor/Destructor
-	Paddle(Player* pPlayer);
+	Paddle(Player* pPlayer, float position_x);
 
 	// Getters/Setters
 	void setPlayer(Player* pPlayer) { pPlayer_ = pPlayer };
@@ -12,17 +12,16 @@ public:
 	
 	// Geometry
 	float position_x;  // X Location of central point
-	float position_y;  // Y Location of central point
+	float position_y {WINDOW_HEIGHT/2};  // Y Location of central point
 	float width;
 	float height;
 
 	// Proprietary functions
-	void Update();
 	void movePaddle();
 
 private:
 	// Movement
-	float speed;
+	float speed { 2 };
 	Direction direction_;
 	Player* pPlayer_;
 };

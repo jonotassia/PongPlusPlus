@@ -1,8 +1,10 @@
-#pragma once
+#ifndef PADDLE_H
+#define PADDLE_H
 
-#include "player.h"
 #include "render.h"
 #include "game.h"
+
+class Player;
 
 class Paddle {
 public:
@@ -15,9 +17,9 @@ public:
 	
 	// Geometry
 	float position_x;  // X Location of central point
-	float position_y {WINDOW_HEIGHT/2};  // Y Location of central point
-	float width;
-	float height;
+	float position_y { WINDOW_HEIGHT / 2 - height / 2};  // Y Location of central point
+	float width { WINDOW_WIDTH / 60 };
+	float height { WINDOW_HEIGHT / 6 };
 
 	// Proprietary functions
 	void movePaddle();
@@ -25,7 +27,7 @@ public:
 private:
 	// Movement
 	float speed { 2 };
-	Direction direction_;
+	Game::Direction direction_{Game::Direction::kNone};
 	Player* pPlayer_;
 };
 
@@ -33,3 +35,5 @@ class PowerPaddle : private Paddle {
 public:
 	void catchBall();
 };
+
+#endif

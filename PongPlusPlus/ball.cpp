@@ -1,4 +1,11 @@
 #include "ball.h"
+#include "paddle.h"
+#include "player.h"
+
+Ball::Ball(Paddle* paddle_one, Paddle* paddle_two) {
+	pPaddleOne_ = paddle_one;
+	pPaddleTwo_ = paddle_two;
+}
 
 /*
 Checks if the ball should deflect from a wall or paddle using the following logic:
@@ -86,14 +93,21 @@ void Ball::moveBall() {
 	position_x += x_speed_;
 	position_y += y_speed_;
 	
-	for (auto paddle : paddles_) {
-		if (checkContact(paddle)) {
-			break;
-		}
-		else if(checkWinningPosition(paddle)) {
-			paddle->getPlayer()->points++;
-			break;
-		}
+	// Check collisions, short circuit if one found
+	if (checkContact(pPaddleOne_)) {
+		return;
+	}
+	else if (checkContact(pPaddleTwo_)) {
+		return;
+	}
+	// Check for win, short circuit if one found	
+	if (checkWinningPosition(pPaddleOne_)) {
+		pPaddleOne_->getPlayer()->points++;
+		return;
+	}
+	else if (checkWinningPosition(pPaddleTwo_)) {
+		pPaddleTwo_->getPlayer()->points++;
+			return;
 	}
 }
 

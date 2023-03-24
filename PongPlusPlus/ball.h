@@ -1,16 +1,22 @@
-#pragma once
-#include <vector>
+#ifndef BALL_H
+#define BALL_H
 
 #include "game.h"
-#include "paddle.h"
+#include "render.h"
+
+// Forward declarations
+class Paddle;
 
 class Ball {
 public:
+	// Constructor/Destructor;
+	Ball(Paddle* paddle_one, Paddle* paddle_two);
+	
 	// Geometry
-	float position_x;  // X Location of central point
-	float position_y;  // Y Location of central point
-	float width;
-	float height;
+	float position_x { WINDOW_WIDTH / 2 - width / 2 };  // X Location of central point
+	float position_y { WINDOW_HEIGHT / 2 - height / 2};  // Y Location of central point
+	float width { 5 };
+	float height { 5 };
 
 	// Proprietary functions
 	void moveBall();
@@ -22,10 +28,12 @@ public:
 
 private:
 	// Movement
-	float x_speed_ { 2 };
-	float y_speed_ { 2 };
+	float x_speed_ { 1 };
+	float y_speed_ { 1 };
 
 	// Linkages
-	Game* pGame_;
-	std::vector<Paddle*> paddles_ { pGame_->getPlayerOne(), pGame_->getPlayerTwo() };
+	Paddle* pPaddleOne_;
+	Paddle* pPaddleTwo_;
 };
+
+#endif

@@ -1,9 +1,21 @@
 #include <SDL.h>
 
 #include "game.h"
+#include "render.h"
+#include "paddle.h"
+#include "ball.h"
 
 Game::Game(Renderer* pRenderer) : pRenderer_(pRenderer) {
 	pRenderer->setGame(this);
+	paddle_one = new Paddle(getPlayerOne(), 20);
+	paddle_two = new Paddle(getPlayerTwo(), WINDOW_WIDTH - 20);
+	ball = new Ball(getPaddleOne(), getPaddleTwo());
+}
+
+Game::~Game() {
+	delete paddle_one;
+	delete paddle_two;
+	delete ball;
 }
 
 void Game::Run() {
@@ -39,9 +51,9 @@ void Game::Run() {
 
 void Game::Update() {
 	// Move each object, ensuring the ball moves last to ensure that it can check for collisions
-	paddle_one.movePaddle();
-	paddle_two.movePaddle();
-	ball.moveBall();
+	paddle_one->movePaddle();
+	paddle_two->movePaddle();
+	ball->moveBall();
 }
 
 bool Game::checkGameOver() {

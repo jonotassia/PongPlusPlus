@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CONTROL_H
+#define CONTROL_H
 
 enum class Buttons {
 	kUpOne,
@@ -6,3 +7,5 @@ enum class Buttons {
 	kUpTwo,
 	kDownTwo
 };
+
+#endif

@@ -1,4 +1,5 @@
-#pragma once
+#ifndef PLAYER_H
+#define PLAYER_H
 
 enum class PlayerNum { kOne, kTwo };
 
@@ -27,3 +28,5 @@ public:
 private:
 
 };
+
+#endif

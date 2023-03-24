@@ -1,10 +1,12 @@
-#pragma once
+#ifndef RENDER_H
+#define RENDER_H
+
 #include <SDL.h>
 
-#include "game.h"
-
+// Forward declarations and constants
 const int WINDOW_WIDTH = 1280;
 const int WINDOW_HEIGHT = 720;
+class Game;
 
 class Renderer {
 public:
@@ -29,3 +31,5 @@ private:
 	SDL_Renderer* pRenderer_ = SDL_CreateRenderer(pWindow_, -1, 0);
 	Game* pGame_;
 };
+
+#endif

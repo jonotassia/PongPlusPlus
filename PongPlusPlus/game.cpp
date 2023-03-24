@@ -7,15 +7,6 @@
 
 Game::Game(Renderer* pRenderer) : pRenderer_(pRenderer) {
 	pRenderer->setGame(this);
-	paddle_one = new Paddle(getPlayerOne(), 10);
-	paddle_two = new Paddle(getPlayerTwo(), WINDOW_WIDTH - 20);
-	ball = new Ball(getPaddleOne(), getPaddleTwo());
-}
-
-Game::~Game() {
-	delete paddle_one;
-	delete paddle_two;
-	delete ball;
 }
 
 void Game::Run() {
@@ -39,11 +30,13 @@ void Game::Run() {
 				}
 			}
 		}
-		// Update game objects and draw screen components
+		// Check if game over. If game over, reset points of both players and draw victory screen
 		if (checkGameOver()) {
 			pRenderer_->drawVictoryScreen();
-			running = false;
+			pPlayerOne_->points = 0;
+			pPlayerTwo_->points = 0;
 		}
+		// Update game objects and draw screen components
 		this->Update();
 		pRenderer_->drawScreen();
 	}
@@ -51,14 +44,49 @@ void Game::Run() {
 
 void Game::Update() {
 	// Move each object, ensuring the ball moves last to ensure that it can check for collisions
-	paddle_one->Update();
-	paddle_two->Update();
-	ball->Update();
+	pSession_->Update();
+}
+
+void Game::resetSession() {
+	pSession_.reset(new Session(this));
 }
 
 bool Game::checkGameOver() {
-	if (pPlayerOne_->points == 10 || pPlayerTwo_->points == 10) {
+	if (pPlayerOne_->points == 10) {
+		pPlayerOne_->total_wins++;
+		return true;
+	}
+	else if (pPlayerTwo_->points == 10) {
+		pPlayerTwo_->total_wins++;
 		return true;
 	}
 	return false;
+}
+
+Session::Session(Game* pGame) : pGame_(pGame) {
+	pPaddleOne_ = new Paddle(pGame_->getPlayerOne(), 10);
+	pPaddleTwo_ = new Paddle(pGame_->getPlayerTwo(), WINDOW_WIDTH - 20);
+	pBall_ = new Ball(getPaddleOne(), getPaddleTwo());
+}
+
+Session::~Session() {
+	delete pPaddleOne_;
+	delete pPaddleTwo_;
+	delete pBall_;
+}
+
+void Session::Update() {
+	// Move each object, ensuring the ball moves last to ensure that it can check for collisions
+	pPaddleOne_->Update();
+	pPaddleTwo_->Update();
+	pBall_->Update();
+	
+	if (pBall_->checkWinningPosition(pPaddleOne_)) {
+		pPaddleTwo_->getPlayer()->points++;
+		pGame_->resetSession();
+	}
+	else if (pBall_->checkWinningPosition(pPaddleTwo_)) {
+		pPaddleOne_->getPlayer()->points++;
+		pGame_->resetSession();
+	}
 }

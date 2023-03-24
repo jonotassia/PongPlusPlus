@@ -94,16 +94,10 @@ void Ball::Update() {
 	
 	// Check collisions and winning positions, short circuit if one found
 	if (checkContact(pPaddleOne_)) {
-		;
+		return;
 	}
 	else if (checkContact(pPaddleTwo_)) {
-		;
-	}
-	else if (checkWinningPosition(pPaddleOne_)) {
-		pPaddleTwo_->getPlayer()->points++;
-	}
-	else if (checkWinningPosition(pPaddleTwo_)) {
-		pPaddleOne_->getPlayer()->points++;
+		return;
 	}
 }
 

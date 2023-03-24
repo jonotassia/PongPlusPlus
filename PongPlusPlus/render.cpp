@@ -7,6 +7,13 @@
 #include "paddle.h"
 #include "ball.h"
 
+Renderer::Renderer() {
+	if (pWindow_ == nullptr || pRenderer_ == nullptr) {
+		throw std::logic_error("Unable to obtain SDL Window/Renderer");
+	}
+	SDL_SetWindowBordered(pWindow_, SDL_TRUE);
+}
+
 Renderer::~Renderer() {
 	SDL_DestroyRenderer(pRenderer_);
 	SDL_DestroyWindow(pWindow_);
@@ -30,15 +37,16 @@ void Renderer::drawNet() {
 
 void Renderer::drawScore() {
 	// TODO: Add score renderer above screen (consider a second window that is born of an abstract screen class)
+
 }
 
 void Renderer::drawBall() {
 	// Create SDL rectangle
 	SDL_Rect ball;
-	ball.x = pGame_->getBall()->position_x;
-	ball.y = pGame_->getBall()->position_y;
-	ball.w = pGame_->getBall()->width;
-	ball.h = pGame_->getBall()->height;
+	ball.x = pGame_->getSession()->getBall()->position_x;
+	ball.y = pGame_->getSession()->getBall()->position_y;
+	ball.w = pGame_->getSession()->getBall()->width;
+	ball.h = pGame_->getSession()->getBall()->height;
 
 	// Render a filled rectangle
 	SDL_RenderFillRect(pRenderer_, &ball);
@@ -47,16 +55,16 @@ void Renderer::drawBall() {
 void Renderer::drawPaddles() {
 	// Create SDL rectangles for each paddle
 	SDL_Rect paddle_one;
-	paddle_one.x = pGame_->getPaddleOne()->position_x;
-	paddle_one.y = pGame_->getPaddleOne()->position_y;
-	paddle_one.w = pGame_->getPaddleOne()->width;
-	paddle_one.h = pGame_->getPaddleOne()->height;
+	paddle_one.x = pGame_->getSession()->getPaddleOne()->position_x;
+	paddle_one.y = pGame_->getSession()->getPaddleOne()->position_y;
+	paddle_one.w = pGame_->getSession()->getPaddleOne()->width;
+	paddle_one.h = pGame_->getSession()->getPaddleOne()->height;
 
 	SDL_Rect paddle_two;
-	paddle_two.x = pGame_->getPaddleTwo()->position_x;
-	paddle_two.y = pGame_->getPaddleTwo()->position_y;
-	paddle_two.w = pGame_->getPaddleTwo()->width;
-	paddle_two.h = pGame_->getPaddleTwo()->height;
+	paddle_two.x = pGame_->getSession()->getPaddleTwo()->position_x;
+	paddle_two.y = pGame_->getSession()->getPaddleTwo()->position_y;
+	paddle_two.w = pGame_->getSession()->getPaddleTwo()->width;
+	paddle_two.h = pGame_->getSession()->getPaddleTwo()->height;
 
 	// Render a filled rectangle
 	SDL_RenderFillRect(pRenderer_, &paddle_one);

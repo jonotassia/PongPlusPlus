@@ -9,7 +9,7 @@ public:
 	Player(PlayerNum num);
 	~Player();
 	
-	// Gameplay data
+	// Session data
 	PlayerNum player_num;
 	int cooldown_timer { 20 };
 	bool powerup_available { false };

@@ -11,6 +11,7 @@ class Game;
 class Renderer {
 public:
 	// Constructors/Destructors
+	Renderer();
 	~Renderer();
 
 	// Getters/Setters
@@ -27,9 +28,15 @@ public:
 	void drawVictoryScreen();
 
 private:
-	SDL_Window* pWindow_ = SDL_CreateWindow("PongPlusPlus", 0, 0, WINDOW_WIDTH, WINDOW_HEIGHT, SDL_WINDOW_SHOWN);
+	SDL_Window* pWindow_ = SDL_CreateWindow(
+		"PongPlusPlus", 
+		SDL_WINDOWPOS_CENTERED, 
+		SDL_WINDOWPOS_CENTERED, 
+		WINDOW_WIDTH, 
+		WINDOW_HEIGHT, 
+		SDL_WINDOW_SHOWN);
 	SDL_Renderer* pRenderer_ = SDL_CreateRenderer(pWindow_, -1, 0);
-	Game* pGame_;
+	Game* pGame_ { nullptr };
 };
 
 #endif

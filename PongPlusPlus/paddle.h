@@ -17,7 +17,7 @@ public:
 	
 	// Geometry
 	float width{ WINDOW_WIDTH / 60 };
-	float height{ WINDOW_HEIGHT / 3 };
+	float height{ WINDOW_HEIGHT / 6 };
 	float position_x;  // X Location of top-left corner
 	float position_y { WINDOW_HEIGHT / 2 - height / 2};  // Y Location of top-left corner
 

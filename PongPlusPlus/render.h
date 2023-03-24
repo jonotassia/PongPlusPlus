@@ -22,7 +22,7 @@ public:
 	void setColorScheme();
 	void drawNet();
 	void drawScreen();
-	void drawScore();
+	void drawScore(int score, int x, int y);
 	void drawBall();
 	void drawPaddles();
 	void drawVictoryScreen();

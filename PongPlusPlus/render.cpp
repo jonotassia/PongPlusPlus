@@ -1,5 +1,6 @@
 #include <iostream>
 #include <SDL.h>
+#include <SDL_ttf.h>
 #include <string>
 
 #include "render.h"
@@ -35,9 +36,40 @@ void Renderer::drawNet() {
 	SDL_RenderDrawLine(pRenderer_, WINDOW_WIDTH / 2, 0, WINDOW_WIDTH / 2, WINDOW_HEIGHT);
 }
 
-void Renderer::drawScore() {
-	// TODO: Add score renderer above screen (consider a second window that is born of an abstract screen class)
+void Renderer::drawScore(int score, int x, int y) {
+	TTF_Init();
+	
+	// Set a font style and size
+	TTF_Font* font = TTF_OpenFont("C:\\Windows\\Fonts\\Candara.ttf", 24);
+	if (!font) {
+		printf(TTF_GetError());
+	}
 
+	// Specify text color
+	SDL_Color White = { 255, 255, 255 };
+
+	// as TTF_RenderText_Solid could only be used on
+	// SDL_Surface then you have to create the surface first
+	SDL_Surface* surfaceMessage =
+		TTF_RenderText_Solid(font, std::to_string(score).c_str(), White);
+
+	// Convert to texture
+	SDL_Texture* Message = SDL_CreateTextureFromSurface(pRenderer_, surfaceMessage);
+
+	// Create a rect that functions as a text box
+	SDL_Rect Message_rect;
+	Message_rect.x = x;
+	Message_rect.y = y;
+	Message_rect.w = 100; 
+	Message_rect.h = 100; 
+
+	// Render the message into the text box
+	SDL_RenderCopy(pRenderer_, Message, NULL, &Message_rect);
+
+	SDL_FreeSurface(surfaceMessage);
+	SDL_DestroyTexture(Message);
+	TTF_CloseFont(font);
+	TTF_Quit();
 }
 
 void Renderer::drawBall() {
@@ -85,7 +117,8 @@ void Renderer::drawScreen() {
 	drawNet();
 	drawPaddles();
 	drawBall();
-	drawScore();
+	drawScore(pGame_->getPlayerOne()->points, WINDOW_WIDTH / 4, WINDOW_HEIGHT * 0.10);
+	drawScore(pGame_->getPlayerTwo()->points, WINDOW_WIDTH - WINDOW_WIDTH / 3, WINDOW_HEIGHT * 0.10);
 
 	// Present the backbuffer
 	SDL_RenderPresent(pRenderer_);

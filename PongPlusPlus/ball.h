@@ -28,8 +28,8 @@ public:
 
 private:
 	// Movement
-	float x_speed_ { 1 };
-	float y_speed_ { 1 };
+	float x_speed_ { 2 };
+	float y_speed_ { 2 };
 
 	// Linkages
 	Paddle* pPaddleOne_;

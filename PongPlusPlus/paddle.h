@@ -16,13 +16,13 @@ public:
 	Player* getPlayer() { return pPlayer_; };
 	
 	// Geometry
-	float position_x;  // X Location of central point
-	float position_y { WINDOW_HEIGHT / 2 - height / 2};  // Y Location of central point
-	float width { WINDOW_WIDTH / 60 };
-	float height { WINDOW_HEIGHT / 6 };
+	float width{ WINDOW_WIDTH / 60 };
+	float height{ WINDOW_HEIGHT / 3 };
+	float position_x;  // X Location of top-left corner
+	float position_y { WINDOW_HEIGHT / 2 - height / 2};  // Y Location of top-left corner
 
 	// Proprietary functions
-	void movePaddle();
+	void Update();
 
 private:
 	// Movement

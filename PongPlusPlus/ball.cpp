@@ -37,13 +37,13 @@ Checks if the ball should deflect from a paddle using the following logic:
 */
 bool Ball::deflectFromPaddle(Paddle* paddle) {
 	// Calculate paddle boundaries
-	float paddle_y_max = paddle->position_y + (paddle->height / 2);
-	float paddle_y_min = paddle->position_y - (paddle->height / 2);
+	float paddle_y_min = paddle->position_y;
+	float paddle_y_max = paddle->position_y + paddle->height;
 
 	// TODO: Optimize these checks so that we don't have to test separately for kOne and kTwo
 	if (paddle->getPlayer()->player_num == PlayerNum::kOne) {
 		// Check boundaries against paddle one, then inverse x-speed
-		float paddle_x_lim = paddle->position_x + (paddle->width / 2);
+		float paddle_x_lim = paddle->position_x + paddle->width;
 
 		if (position_y >= paddle_y_min && position_y <= paddle_y_max && position_x <= paddle_x_lim) {
 			x_speed_ -= 2 * x_speed_;
@@ -51,7 +51,7 @@ bool Ball::deflectFromPaddle(Paddle* paddle) {
 		}
 	}
 	else {
-		float paddle_x_lim = paddle->position_x - (paddle->width / 2);
+		float paddle_x_lim = paddle->position_x;
 		// Check boundaries against paddle two, then inverse x-speed
 		if (position_y >= paddle_y_min && position_y <= paddle_y_max && position_x >= paddle_x_lim) {
 			x_speed_ -= 2 * x_speed_;
@@ -70,16 +70,15 @@ Assumes contact is always checked first!
 bool Ball::checkWinningPosition(Paddle* paddle) {
 	// TODO: Optimize these checks so that we don't have to test separately for kOne and kTwo
 	if (paddle->getPlayer()->player_num == PlayerNum::kOne) {
-		float paddle_x_lim = paddle->position_x - (paddle->width / 2);
 		// Check boundaries against paddle one, then inverse x-speed
-		if (position_x < paddle_x_lim) {
+		if (position_x <= 0) {
 			return true;
 		}
 	}
 	else {
-		float paddle_x_lim = paddle->position_x + (paddle->width / 2);
+		float paddle_x_lim = paddle->position_x + paddle->width;
 		// Check boundaries against paddle two, then inverse x-speed
-		if (position_x > paddle_x_lim) {
+		if (position_x >= WINDOW_WIDTH) {
 			return true;
 		}
 	}
@@ -89,25 +88,22 @@ bool Ball::checkWinningPosition(Paddle* paddle) {
 /*
 Moves the ball, taking into consideration ball speed, potential direction changes from contact, and winning points
 */
-void Ball::moveBall() {
+void Ball::Update() {
 	position_x += x_speed_;
 	position_y += y_speed_;
 	
-	// Check collisions, short circuit if one found
+	// Check collisions and winning positions, short circuit if one found
 	if (checkContact(pPaddleOne_)) {
-		return;
+		;
 	}
 	else if (checkContact(pPaddleTwo_)) {
-		return;
+		;
 	}
-	// Check for win, short circuit if one found	
-	if (checkWinningPosition(pPaddleOne_)) {
-		pPaddleOne_->getPlayer()->points++;
-		return;
+	else if (checkWinningPosition(pPaddleOne_)) {
+		pPaddleTwo_->getPlayer()->points++;
 	}
 	else if (checkWinningPosition(pPaddleTwo_)) {
-		pPaddleTwo_->getPlayer()->points++;
-			return;
+		pPaddleOne_->getPlayer()->points++;
 	}
 }
 

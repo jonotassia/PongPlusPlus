@@ -7,7 +7,7 @@
 
 Game::Game(Renderer* pRenderer) : pRenderer_(pRenderer) {
 	pRenderer->setGame(this);
-	paddle_one = new Paddle(getPlayerOne(), 20);
+	paddle_one = new Paddle(getPlayerOne(), 10);
 	paddle_two = new Paddle(getPlayerTwo(), WINDOW_WIDTH - 20);
 	ball = new Ball(getPaddleOne(), getPaddleTwo());
 }
@@ -51,9 +51,9 @@ void Game::Run() {
 
 void Game::Update() {
 	// Move each object, ensuring the ball moves last to ensure that it can check for collisions
-	paddle_one->movePaddle();
-	paddle_two->movePaddle();
-	ball->moveBall();
+	paddle_one->Update();
+	paddle_two->Update();
+	ball->Update();
 }
 
 bool Game::checkGameOver() {

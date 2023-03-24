@@ -13,13 +13,13 @@ public:
 	Ball(Paddle* paddle_one, Paddle* paddle_two);
 	
 	// Geometry
-	float position_x { WINDOW_WIDTH / 2 - width / 2 };  // X Location of central point
-	float position_y { WINDOW_HEIGHT / 2 - height / 2};  // Y Location of central point
-	float width { 5 };
-	float height { 5 };
+	float width{ 5 };
+	float height{ 5 };
+	float position_x { WINDOW_WIDTH / 2 - width / 2 };  // X Location of top-left corner
+	float position_y { WINDOW_HEIGHT / 2 - height / 2};  // Y Location of top-left corner
 
 	// Proprietary functions
-	void moveBall();
+	void Update();
 	bool checkContact(Paddle* paddle);
 	bool checkWinningPosition(Paddle* paddle);
 	bool deflectFromPaddle(Paddle* paddle);

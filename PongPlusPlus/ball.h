@@ -2,7 +2,7 @@
 #define BALL_H
 
 #include "game.h"
-#include "render.h"
+#include "definitions.h"
 
 // Forward declarations
 class Paddle;

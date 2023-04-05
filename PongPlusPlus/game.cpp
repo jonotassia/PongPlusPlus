@@ -1,12 +1,13 @@
 #include <SDL.h>
 
 #include "game.h"
+#include "control.h"
 #include "render.h"
 #include "paddle.h"
 #include "ball.h"
 
 Game::Game(Renderer* pRenderer) : pRenderer_(pRenderer) {
-	pRenderer->setGame(this);
+	pRenderer_->setGame(this);
 }
 
 void Game::Run() {
@@ -37,13 +38,14 @@ void Game::Run() {
 			pPlayerTwo_->points = 0;
 		}
 		// Update game objects and draw screen components
-		this->Update();
+		this->Update(running);
 		pRenderer_->drawScreen();
 	}
 }
 
-void Game::Update() {
+void Game::Update(bool& running) {
 	// Move each object, ensuring the ball moves last to ensure that it can check for collisions
+	pController_->handleInput(running);
 	pSession_->Update();
 }
 

@@ -2,6 +2,8 @@
 #define GAME_H
 
 #include <memory>
+#include "control.h"
+#include "definitions.h"
 #include "player.h"
 
 // Forward Declarations
@@ -22,27 +24,9 @@ public:
 	
 	// Proprietary functions
 	void Run();
-	void Update();
+	void Update(bool& running);
 	bool checkGameOver();
 	void resetSession();
-
-	// Class enums
-	static enum class PowerUps {
-		kNone,
-		kFire,
-		kIce,
-		kSun,
-		kShadow,
-		kSniper
-	};
-
-	static enum class Direction {
-		kNone,
-		kUp,
-		kDown,
-		kLeft,
-		kRight
-	};
 
 	// Public variables
 	PowerUps color_scheme_ = PowerUps::kNone;
@@ -52,8 +36,9 @@ private:
 	Renderer* pRenderer_;
 
 	// Persistent objects (unique ownership)
-	std::unique_ptr<Player> pPlayerOne_ = std::make_unique<Player>(PlayerNum::kOne);
-	std::unique_ptr<Player> pPlayerTwo_ = std::make_unique<Player>(PlayerNum::kTwo);
+	std::unique_ptr<Player> pPlayerOne_ = std::make_unique<Player>(Player::PlayerNum::kOne);
+	std::unique_ptr<Player> pPlayerTwo_ = std::make_unique<Player>(Player::PlayerNum::kTwo);
+	std::unique_ptr<Controller> pController_ = std::make_unique<Controller>(pPlayerOne_.get(), pPlayerTwo_.get());
 
 	// Session objects (unique ownership)
 	std::unique_ptr<Session> pSession_ = std::make_unique<Session>(this);

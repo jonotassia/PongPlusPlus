@@ -41,7 +41,7 @@ bool Ball::deflectFromPaddle(Paddle* paddle) {
 	float paddle_y_max = paddle->position_y + paddle->height;
 
 	// TODO: Optimize these checks so that we don't have to test separately for kOne and kTwo
-	if (paddle->getPlayer()->player_num == PlayerNum::kOne) {
+	if (paddle->getPlayer()->player_num == Player::PlayerNum::kOne) {
 		// Check boundaries against paddle one, then inverse x-speed
 		float paddle_x_lim = paddle->position_x + paddle->width;
 
@@ -69,7 +69,7 @@ Assumes contact is always checked first!
 */
 bool Ball::checkWinningPosition(Paddle* paddle) {
 	// TODO: Optimize these checks so that we don't have to test separately for kOne and kTwo
-	if (paddle->getPlayer()->player_num == PlayerNum::kOne) {
+	if (paddle->getPlayer()->player_num == Player::PlayerNum::kOne) {
 		// Check boundaries against paddle one, then inverse x-speed
 		if (position_x <= 0) {
 			return true;

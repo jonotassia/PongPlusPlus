@@ -1,13 +1,22 @@
 #ifndef PLAYER_H
 #define PLAYER_H
 
-enum class PlayerNum { kOne, kTwo };
+// Forward declaration
+class Controller;
+class Paddle;
 
 class Player {
 public:
+	// Class Enums
+	enum class PlayerNum { kOne, kTwo };
+	
 	// Constructors/Destructors
 	Player(PlayerNum num);
 	~Player();
+
+	// Getters/Setters
+	Paddle* getPaddle() { return pPaddle_; }
+	void setPaddle(Paddle* pPaddle) { pPaddle_ = pPaddle; }
 	
 	// Session data
 	PlayerNum player_num;
@@ -26,7 +35,8 @@ public:
 	void loadPlayerStats();
 
 private:
-
+	friend class Controller;
+	Paddle* pPaddle_;
 };
 
 #endif

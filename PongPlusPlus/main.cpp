@@ -2,8 +2,8 @@
 #include <SDL.h>
 #include <string>
 
-#include "render.h"
 #include "game.h"
+#include "render.h"
 
 int main(int argc, char *args[])
 {

@@ -2,10 +2,9 @@
 #define RENDER_H
 
 #include <SDL.h>
+#include "definitions.h"
 
 // Forward declarations and constants
-const int WINDOW_WIDTH = 1280;
-const int WINDOW_HEIGHT = 720;
 class Game;
 
 class Renderer {

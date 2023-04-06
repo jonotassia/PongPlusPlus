@@ -26,6 +26,9 @@ public:
 	float speed{ 1.5 };
 	Direction direction{ Direction::kNone };
 
+	// Gameplay
+	bool ball_caught{ false };
+
 	// Proprietary functions
 	void Update();
 	bool checkBoundary(Direction direction);

@@ -1,4 +1,5 @@
 #include "ball.h"
+#include "definitions.h"
 #include "paddle.h"
 #include "player.h"
 

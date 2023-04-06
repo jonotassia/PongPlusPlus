@@ -29,8 +29,9 @@ public:
 
 private:	
 	// Movement
-	float x_speed_ { 1 };
-	float y_speed_ { 1 };
+	std::uniform_int_distribution<> y_speed_generator_{ 7, 10 };
+	float x_speed_{ 1 };
+	float y_speed_{ y_speed_generator_(MTE) / (float)10 };
 
 	// Serve ball tracker
 	bool ball_served = false;

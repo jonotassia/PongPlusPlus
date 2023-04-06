@@ -30,6 +30,9 @@ void Controller::handleInput(bool& running, SDL_Event& e) const {
 		else if (key_state[SDL_SCANCODE_SPACE]) {
 			this->pGame_->getSession()->getBall()->serveBall();
 		}
+		else if (key_state[SDL_SCANCODE_D]) {
+			this->catchBall(*pPlayerOne_);
+		}
 
 		// Check player two input
 		if (key_state[SDL_SCANCODE_UP]) {
@@ -44,12 +47,20 @@ void Controller::handleInput(bool& running, SDL_Event& e) const {
 		else if (key_state[SDL_SCANCODE_KP_ENTER]) {
 			this->pGame_->getSession()->getBall()->serveBall();
 		}
+		else if (key_state[SDL_SCANCODE_RCTRL]) {
+			this->catchBall(*pPlayerTwo_);
+		}
 	}
 }
 
 // Changes direction of the paddle based on user input
 void Controller::changeDirection(Direction direction, Player& player) const {
 	player.pPaddle_->direction = direction;
+}
+
+// Triggers the paddle to catch the ball, if criteria are met
+void Controller::catchBall(Player& player) const {
+	player.pPaddle_->catchBall();
 }
 
 // Reset paddle directions

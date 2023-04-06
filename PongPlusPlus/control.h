@@ -18,6 +18,7 @@ public:
 	// Proprietary functions
 	void handleInput(bool& running, SDL_Event& e) const;
 	void resetPaddles() const;
+	void catchBall(Player& player) const;
 
 private:
 	// Private functions

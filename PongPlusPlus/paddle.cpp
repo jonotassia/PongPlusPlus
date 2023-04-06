@@ -59,6 +59,10 @@ bool Paddle::checkBoundary(Direction direction) {
 	return false;
 }
 
+void Paddle::catchBall() {
+	return;
+}
+
 // Reset paddle directions
 void Paddle::resetDirection() {
 	this->direction = Direction::kNone;

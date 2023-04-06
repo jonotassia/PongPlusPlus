@@ -31,7 +31,10 @@ void Game::Run() {
 		// Update game objects with input and draw screen components
 		SDL_Event event;
 		while (SDL_PollEvent(&event)) {
-			pController_->handleInput(running, event);
+			// Break if this is a phantom press of the button (which is automatic with letter keys)
+			if (event.key.keysym.scancode != 0) {
+				pController_->handleInput(running, event);
+			}
 		}
 		this->Update(running);
 		pRenderer_->drawScreen();

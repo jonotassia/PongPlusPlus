@@ -10,15 +10,15 @@ Awaits input from user. Based on input, routes to correct function.
 Once input has been received, reset the direction of the paddle.
 */
 void Controller::handleInput(bool& running, SDL_Event& e) const {	
-	// Reset paddle direction
-	this->resetPaddles();
-	
+	// Reset the paddles to kNone direction
+	resetPaddles();
+
 	if (e.type == SDL_QUIT) {
 		running = false;
 	}
 	else if (e.type == SDL_KEYDOWN) {
+		// Check player one input
 		switch (e.key.keysym.sym) {
-			// Check player one input
 			case SDLK_w:
 				this->changeDirection(Direction::kUp, *pPlayerOne_);
 				break;
@@ -28,8 +28,9 @@ void Controller::handleInput(bool& running, SDL_Event& e) const {
 			case SDLK_SPACE:
 				this->pGame_->getSession()->getBall()->serveBall();
 				break;
-			
-			// Check player two input
+		}
+		// Check player two input
+		switch (e.key.keysym.sym) {
 			case SDLK_UP:
 				this->changeDirection(Direction::kUp, *pPlayerTwo_);
 				break;

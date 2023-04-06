@@ -47,11 +47,13 @@ bool Paddle::checkBoundary(Direction direction) {
 		if (position_y > 0) {
 			return true;
 		}
+		break;
 	// Check bottom boundary
 	case Direction::kDown:
 		if (position_y + height < WINDOW_HEIGHT) {
 			return true;
 		}
+		break;
 	}
 	// If neither case is true, return false
 	return false;

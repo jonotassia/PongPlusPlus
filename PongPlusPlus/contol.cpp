@@ -17,32 +17,32 @@ void Controller::handleInput(bool& running, SDL_Event& e) const {
 		running = false;
 	}
 	else if (e.type == SDL_KEYDOWN) {
+		// Create a pointer to the SDL key state
+		const Uint8* key_state = SDL_GetKeyboardState( NULL );
+		
 		// Check player one input
-		switch (e.key.keysym.sym) {
-			case SDLK_w:
-				this->changeDirection(Direction::kUp, *pPlayerOne_);
-				break;
-			case SDLK_s:
-				this->changeDirection(Direction::kDown, *pPlayerOne_);
-				break;
-			case SDLK_SPACE:
-				this->pGame_->getSession()->getBall()->serveBall();
-				break;
+		if (key_state[SDL_SCANCODE_W]) {
+			this->changeDirection(Direction::kUp, *pPlayerOne_);
 		}
+		else if (key_state[SDL_SCANCODE_S]) {
+			this->changeDirection(Direction::kDown, *pPlayerOne_);
+		}
+		else if (key_state[SDL_SCANCODE_SPACE]) {
+			this->pGame_->getSession()->getBall()->serveBall();
+		}
+
 		// Check player two input
-		switch (e.key.keysym.sym) {
-			case SDLK_UP:
-				this->changeDirection(Direction::kUp, *pPlayerTwo_);
-				break;
-			case SDLK_DOWN:
-				this->changeDirection(Direction::kDown, *pPlayerTwo_);
-				break;
-			case SDLK_RETURN:
-				this->pGame_->getSession()->getBall()->serveBall();
-				break;
-			case SDLK_KP_ENTER:
-				this->pGame_->getSession()->getBall()->serveBall();
-				break;
+		if (key_state[SDL_SCANCODE_UP]) {
+			this->changeDirection(Direction::kUp, *pPlayerTwo_);
+		}
+		else if (key_state[SDL_SCANCODE_DOWN]) {
+			this->changeDirection(Direction::kDown, *pPlayerTwo_);
+		}
+		else if (key_state[SDL_SCANCODE_RETURN]) {
+			this->pGame_->getSession()->getBall()->serveBall();
+		}
+		else if (key_state[SDL_SCANCODE_KP_ENTER]) {
+			this->pGame_->getSession()->getBall()->serveBall();
 		}
 	}
 }

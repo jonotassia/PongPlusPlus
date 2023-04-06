@@ -24,11 +24,13 @@ void Paddle::Update() {
 	switch (direction) {
 		case Direction::kUp:
 			if (checkBoundary(Direction::kUp)) {
-				position_y += speed;
+				position_y -= speed;
+				break;
 			}
 		case Direction::kDown:
 			if (checkBoundary(Direction::kDown)) {
-				position_y -= speed;
+				position_y += speed;
+				break;
 			}
 	}
 }
@@ -42,15 +44,20 @@ bool Paddle::checkBoundary(Direction direction) {
 	switch (direction) {
 	// Check top boundary
 	case Direction::kUp:
-		if (position_y < WINDOW_HEIGHT) {
+		if (position_y > 0) {
 			return true;
 		}
 	// Check bottom boundary
 	case Direction::kDown:
-		if (position_y - height > 0) {
+		if (position_y + height < WINDOW_HEIGHT) {
 			return true;
 		}
 	}
 	// If neither case is true, return false
 	return false;
+}
+
+// Reset paddle directions
+void Paddle::resetDirection() {
+	this->direction = Direction::kNone;
 }

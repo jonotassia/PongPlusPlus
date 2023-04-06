@@ -23,13 +23,14 @@ public:
 	float position_y { WINDOW_HEIGHT / 2 - height / 2};  // Y Location of top-left corner
 
 	// Movement
-	float speed{ 2 };
+	float speed{ 1.5 };
 	Direction direction{ Direction::kNone };
 
 	// Proprietary functions
 	void Update();
 	bool checkBoundary(Direction direction);
 	void catchBall();
+	void resetDirection();
 
 private:
 	Player* pPlayer_;

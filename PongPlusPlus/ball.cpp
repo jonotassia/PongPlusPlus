@@ -89,16 +89,26 @@ bool Ball::checkWinningPosition(Paddle* paddle) {
 Moves the ball, taking into consideration ball speed, potential direction changes from contact, and winning points
 */
 void Ball::Update() {
-	position_x += x_speed_;
-	position_y += y_speed_;
-	
-	// Check collisions and winning positions, short circuit if one found
-	if (checkContact(pPaddleOne_)) {
-		return;
+	if (ball_served) {
+		position_x += x_speed_;
+		position_y += y_speed_;
+
+		// Check collisions and winning positions, short circuit if one found
+		if (checkContact(pPaddleOne_)) {
+			return;
+		}
+		else if (checkContact(pPaddleTwo_)) {
+			return;
+		}
 	}
-	else if (checkContact(pPaddleTwo_)) {
-		return;
-	}
+}
+
+/*
+Sets the ball served flag to true, which will begin ball movement. 
+Typically controlled by SPACE BAR for player 1 and ENTER for player 2.
+*/
+void Ball::serveBall() {
+	ball_served = true;
 }
 
 /*

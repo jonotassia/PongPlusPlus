@@ -2,6 +2,7 @@
 #define GAME_H
 
 #include <memory>
+
 #include "control.h"
 #include "definitions.h"
 #include "player.h"
@@ -30,6 +31,7 @@ public:
 
 	// Public variables
 	PowerUps color_scheme_ = PowerUps::kNone;
+	float FPS_ADJUST = 1 / 60 * 1000.0f;
 
 private:
 	// Renderer
@@ -38,7 +40,7 @@ private:
 	// Persistent objects (unique ownership)
 	std::unique_ptr<Player> pPlayerOne_ = std::make_unique<Player>(Player::PlayerNum::kOne);
 	std::unique_ptr<Player> pPlayerTwo_ = std::make_unique<Player>(Player::PlayerNum::kTwo);
-	std::unique_ptr<Controller> pController_ = std::make_unique<Controller>(pPlayerOne_.get(), pPlayerTwo_.get());
+	std::unique_ptr<Controller> pController_ = std::make_unique<Controller>(pPlayerOne_.get(), pPlayerTwo_.get(), this);
 
 	// Session objects (unique ownership)
 	std::unique_ptr<Session> pSession_ = std::make_unique<Session>(this);

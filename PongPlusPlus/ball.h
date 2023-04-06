@@ -23,13 +23,17 @@ public:
 	bool checkContact(Paddle* paddle);
 	bool checkWinningPosition(Paddle* paddle);
 	bool deflectFromPaddle(Paddle* paddle);
+	void serveBall();
 	void playWallBounce();
 	void playPaddleHit();
 
-private:
+private:	
 	// Movement
-	float x_speed_ { 2 };
-	float y_speed_ { 2 };
+	float x_speed_ { 1 };
+	float y_speed_ { 1 };
+
+	// Serve ball tracker
+	bool ball_served = false;
 
 	// Linkages
 	Paddle* pPaddleOne_;

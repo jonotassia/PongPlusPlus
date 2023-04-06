@@ -6,46 +6,52 @@
 #include "paddle.h"
 #include "ball.h"
 
+
 Game::Game(Renderer* pRenderer) : pRenderer_(pRenderer) {
 	pRenderer_->setGame(this);
 }
 
+/*
+Establishes the game loop, which includes:
+	* Input handling
+	* Game updates
+	* Rendering
+*/
 void Game::Run() {
 	bool running = true;
+	
+	// Declare variables for frame cap
+	Uint32 start, end;
+	float elapsed;
 
-	// Continue looping and processing events until user exits
-	while (running)
-	{
+	// Continue looping and processing events until user exits. Handle input will change value of running as needed.
+	while (running) {
+		start = SDL_GetTicks();
+		
+		// Update game objects with input and draw screen components
 		SDL_Event event;
-		while (SDL_PollEvent(&event))
-		{
-			if (event.type == SDL_QUIT)
-			{
-				running = false;
-			}
-			else if (event.type == SDL_KEYDOWN)
-			{
-				if (event.key.keysym.sym == SDLK_ESCAPE)
-				{
-					running = false;
-				}
-			}
+		while (SDL_PollEvent(&event)) {
+			pController_->handleInput(running, event);
 		}
-		// Check if game over. If game over, reset points of both players and draw victory screen
-		if (checkGameOver()) {
-			pRenderer_->drawVictoryScreen();
-			pPlayerOne_->points = 0;
-			pPlayerTwo_->points = 0;
-		}
-		// Update game objects and draw screen components
 		this->Update(running);
 		pRenderer_->drawScreen();
+
+		// Calculate delay between loops to cap at 60 FPS
+		end = SDL_GetTicks();
+		float elapsed = (end - start) / (float)SDL_GetPerformanceFrequency() * 1000.0f;
+		SDL_Delay(FPS_ADJUST - elapsed);
 	}
 }
 
 void Game::Update(bool& running) {
+	// Check if game over. If game over, reset points of both players and draw victory screen
+	if (checkGameOver()) {
+		pRenderer_->drawVictoryScreen();
+		pPlayerOne_->points = 0;
+		pPlayerTwo_->points = 0;
+	}
+	
 	// Move each object, ensuring the ball moves last to ensure that it can check for collisions
-	pController_->handleInput(running);
 	pSession_->Update();
 }
 

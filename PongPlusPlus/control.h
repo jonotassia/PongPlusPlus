@@ -2,22 +2,31 @@
 #define CONTROL_H
 
 #include <memory>
+#include <SDL.h>
 
-#include "game.h"
 #include "definitions.h"
 
 // Forward declarations
 class Player;
+class Game;
 
 class Controller {
 public:
-	Controller(Player* pPlayerOne, Player* pPlayerTwo) : pPlayerOne_(pPlayerOne), pPlayerTwo_(pPlayerTwo) {}
-	void handleInput(bool& running) const;
+	// Constructor/Destructor
+	Controller(Player* pPlayerOne, Player* pPlayerTwo, Game* pGame) : pPlayerOne_(pPlayerOne), pPlayerTwo_(pPlayerTwo), pGame_(pGame) {}
+	
+	// Proprietary functions
+	void handleInput(bool& running, SDL_Event& e) const;
+	void resetPaddles() const;
 
 private:
+	// Private functions
 	void changeDirection(Direction direction, Player& player) const;
+	
+	// Non-owning pointers
 	Player* pPlayerOne_;
 	Player* pPlayerTwo_;
+	Game* pGame_;
 };
 
 #endif

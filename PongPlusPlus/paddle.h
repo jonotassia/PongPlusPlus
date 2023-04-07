@@ -1,16 +1,16 @@
 #ifndef PADDLE_H
 #define PADDLE_H
 
-#include "game.h"
 #include "definitions.h"
 
 // Forward declaration
 class Player;
+class Session;
 
 class Paddle {
 public:
 	// Constructor/Destructor
-	Paddle(Player* pPlayer, float position_x);
+	Paddle(Session* pSession, Player* pPlayer, float position_x);
 
 	// Getters/Setters
 	void setPlayer(Player* pPlayer) { pPlayer_ = pPlayer; };
@@ -37,6 +37,7 @@ public:
 
 private:
 	Player* pPlayer_;
+	Session* pSession_;
 };
 
 #endif

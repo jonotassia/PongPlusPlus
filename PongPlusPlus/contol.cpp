@@ -28,7 +28,9 @@ void Controller::handleInput(bool& running, SDL_Event& e) const {
 			this->changeDirection(Direction::kDown, *pPlayerOne_);
 		}
 		else if (key_state[SDL_SCANCODE_SPACE]) {
-			this->pGame_->getSession()->getBall()->serveBall();
+			if (pPlayerOne_->serve_owner && !this->pGame_->getSession()->getBall()->ball_served) {
+				this->pGame_->getSession()->getBall()->serveBall();
+			}
 		}
 		else if (key_state[SDL_SCANCODE_D]) {
 			this->catchBall(*pPlayerOne_);
@@ -42,10 +44,14 @@ void Controller::handleInput(bool& running, SDL_Event& e) const {
 			this->changeDirection(Direction::kDown, *pPlayerTwo_);
 		}
 		else if (key_state[SDL_SCANCODE_RETURN]) {
-			this->pGame_->getSession()->getBall()->serveBall();
+			if (pPlayerTwo_->serve_owner && !this->pGame_->getSession()->getBall()->ball_served) {
+				this->pGame_->getSession()->getBall()->serveBall();
+			}
 		}
 		else if (key_state[SDL_SCANCODE_KP_ENTER]) {
-			this->pGame_->getSession()->getBall()->serveBall();
+			if (pPlayerTwo_->serve_owner && !this->pGame_->getSession()->getBall()->ball_served) {
+				this->pGame_->getSession()->getBall()->serveBall();
+			}
 		}
 		else if (key_state[SDL_SCANCODE_RCTRL]) {
 			this->catchBall(*pPlayerTwo_);

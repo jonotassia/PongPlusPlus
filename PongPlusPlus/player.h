@@ -22,6 +22,7 @@ public:
 	PlayerNum player_num;
 	int cooldown_timer { 20 };
 	bool powerup_available { false };
+	bool serve_owner{ (player_num == PlayerNum::kOne) ? true : false };
 	int points { 0 };
 
 	// Player stats

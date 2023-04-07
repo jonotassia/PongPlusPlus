@@ -1,11 +1,11 @@
+#include "paddle.h"
 #include "ball.h"
 #include "definitions.h"
-#include "paddle.h"
 #include "player.h"
+#include "game.h"
 
-Ball::Ball(Paddle* paddle_one, Paddle* paddle_two) {
-	pPaddleOne_ = paddle_one;
-	pPaddleTwo_ = paddle_two;
+Ball::Ball(Session* pSession) {
+	pSession_ = pSession;
 }
 
 /*
@@ -90,18 +90,20 @@ bool Ball::checkWinningPosition(Paddle* paddle) {
 Moves the ball, taking into consideration ball speed, potential direction changes from contact, and winning points
 */
 void Ball::Update() {
+	// Freeze the ball as long as it is not served
 	if (ball_served) {
 		position_x += x_speed_;
 		position_y += y_speed_;
 
 		// Check collisions and winning positions, short circuit if one found
-		if (checkContact(pPaddleOne_)) {
+		if (checkContact(pSession_->getPaddleOne())) {
 			return;
 		}
-		else if (checkContact(pPaddleTwo_)) {
+		else if (checkContact(pSession_->getPaddleTwo())) {
 			return;
 		}
 	}
+	// TODO: Make the ball "stick" to the paddle if it has been caught
 }
 
 /*
@@ -109,6 +111,9 @@ Sets the ball served flag to true, which will begin ball movement.
 Typically controlled by SPACE BAR for player 1 and ENTER for player 2.
 */
 void Ball::serveBall() {
+	if (pSession_->getPaddleTwo()->getPlayer()->serve_owner) {
+		x_speed_ *= -1;
+	}
 	ball_served = true;
 }
 

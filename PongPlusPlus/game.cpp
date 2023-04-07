@@ -5,6 +5,7 @@
 #include "render.h"
 #include "paddle.h"
 #include "ball.h"
+#include "player.h"
 
 
 Game::Game(Renderer* pRenderer) : pRenderer_(pRenderer) {
@@ -75,9 +76,9 @@ bool Game::checkGameOver() {
 }
 
 Session::Session(Game* pGame) : pGame_(pGame) {
-	pPaddleOne_ = new Paddle(pGame_->getPlayerOne(), 10);
-	pPaddleTwo_ = new Paddle(pGame_->getPlayerTwo(), WINDOW_WIDTH - 20);
-	pBall_ = new Ball(getPaddleOne(), getPaddleTwo());
+	pPaddleOne_ = new Paddle(this, pGame_->getPlayerOne(), 10);
+	pPaddleTwo_ = new Paddle(this, pGame_->getPlayerTwo(), WINDOW_WIDTH - 20);
+	pBall_ = new Ball(this);
 }
 
 Session::~Session() {
@@ -94,10 +95,14 @@ void Session::Update() {
 	
 	if (pBall_->checkWinningPosition(pPaddleOne_)) {
 		pPaddleTwo_->getPlayer()->points++;
+		pPaddleTwo_->getPlayer()->serve_owner = true;
+		pPaddleOne_->getPlayer()->serve_owner = false;
 		pGame_->resetSession();
 	}
 	else if (pBall_->checkWinningPosition(pPaddleTwo_)) {
 		pPaddleOne_->getPlayer()->points++;
+		pPaddleOne_->getPlayer()->serve_owner = true;
+		pPaddleTwo_->getPlayer()->serve_owner = false;
 		pGame_->resetSession();
 	}
 }

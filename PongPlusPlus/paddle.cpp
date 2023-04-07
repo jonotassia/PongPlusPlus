@@ -2,11 +2,15 @@
 
 #include "paddle.h"
 #include "game.h"
+#include "ball.h"
 
-
-Paddle::Paddle(Player* player, float pos_x) {
+Paddle::Paddle(Session* pSession, Player* player, float pos_x) {
+	// Set Player
 	setPlayer(player);
 	player->setPaddle(this);
+	
+	// Set Session
+	pSession_ = pSession;
 
 	// Set x position and check if within window width
 	if (pos_x > 0 || pos_x < WINDOW_WIDTH) {
@@ -59,8 +63,33 @@ bool Paddle::checkBoundary(Direction direction) {
 	return false;
 }
 
+/*
+Catches the ball if it meets the following criteria:
+	* Ball is within 2 pixels of the paddle in the x direction
+	* Ball is between the top and bottom of the paddle in the y direction
+*/
 void Paddle::catchBall() {
-	return;
+	// Extracting data points for readability before conditional expressions
+	float ball_x = pSession_->getBall()->position_x;
+	float ball_y = pSession_->getBall()->position_y;
+	auto player_num = this->getPlayer()->player_num;
+	
+	// Check boundaries against paddle one (with small leniency of 2 pixels in x direction), then catch ball.
+	if (player_num == Player::PlayerNum::kOne) {
+		if (ball_x < position_x + width + 2 && ball_y > position_y && ball_y < position_y + height) {
+			pSession_->getBall()->ball_served = false;
+			pPlayer_->serve_owner = true;
+			ball_caught = true;
+		}
+	}
+	// Check boundaries against paddle two (with small leniency of 2 pixels in x direction), then catch ball.
+	else {
+		if (ball_x < position_x - 2 && ball_y > position_y && ball_y < position_y + height) {
+			pSession_->getBall()->ball_served = false;
+			pPlayer_->serve_owner = true;
+			ball_caught = true;
+		}
+	}
 }
 
 // Reset paddle directions

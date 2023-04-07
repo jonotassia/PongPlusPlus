@@ -27,7 +27,7 @@ public:
 	Direction direction{ Direction::kNone };
 
 	// Gameplay
-	bool ball_caught{ false };
+	bool ball_caught{ false };   // Indicates if this paddle has caught the ball
 
 	// Proprietary functions
 	void Update();
@@ -38,6 +38,9 @@ public:
 private:
 	Player* pPlayer_;
 	Session* pSession_;
+
+	// Gameplay
+	int catches_remaining_{ 1 };  // Each attempt at catching in a given session decrements this by 1
 };
 
 #endif

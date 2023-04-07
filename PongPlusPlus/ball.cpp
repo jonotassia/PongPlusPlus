@@ -9,6 +9,25 @@ Ball::Ball(Session* pSession) {
 }
 
 /*
+Moves the ball, taking into consideration ball speed, potential direction changes from contact, and winning points
+*/
+void Ball::Update() {
+	// Freeze the ball as long as it is not served
+	if (ball_served) {
+		position_x += x_speed_;
+		position_y += y_speed_;
+
+		// Check collisions and winning positions, short circuit if one found
+		if (checkContact(pSession_->getPaddleOne())) {
+			return;
+		}
+		else if (checkContact(pSession_->getPaddleTwo())) {
+			return;
+		}
+	}
+}
+
+/*
 Checks if the ball should deflect from a wall or paddle using the following logic:
 	* Ball is greater than WINDOW_HEIGHT
 	* Ball is less than or equal to WINDOW_HEIGHT
@@ -47,7 +66,9 @@ bool Ball::deflectFromPaddle(Paddle* paddle) {
 		float paddle_x_lim = paddle->position_x + paddle->width;
 
 		if (position_y >= paddle_y_min && position_y <= paddle_y_max && position_x <= paddle_x_lim) {
+			// Reverse speed and speed up
 			x_speed_ -= 2 * x_speed_;
+			speedBallUp(0.05);
 			return true;
 		}
 	}
@@ -55,7 +76,9 @@ bool Ball::deflectFromPaddle(Paddle* paddle) {
 		float paddle_x_lim = paddle->position_x;
 		// Check boundaries against paddle two, then inverse x-speed
 		if (position_y >= paddle_y_min && position_y <= paddle_y_max && position_x >= paddle_x_lim) {
+			// Reverse speed and speed up
 			x_speed_ -= 2 * x_speed_;
+			speedBallUp(0.05);
 			return true;
 		}
 	}
@@ -87,34 +110,33 @@ bool Ball::checkWinningPosition(Paddle* paddle) {
 }
 
 /*
-Moves the ball, taking into consideration ball speed, potential direction changes from contact, and winning points
-*/
-void Ball::Update() {
-	// Freeze the ball as long as it is not served
-	if (ball_served) {
-		position_x += x_speed_;
-		position_y += y_speed_;
-
-		// Check collisions and winning positions, short circuit if one found
-		if (checkContact(pSession_->getPaddleOne())) {
-			return;
-		}
-		else if (checkContact(pSession_->getPaddleTwo())) {
-			return;
-		}
-	}
-	// TODO: Make the ball "stick" to the paddle if it has been caught
-}
-
-/*
 Sets the ball served flag to true, which will begin ball movement. 
 Typically controlled by SPACE BAR for player 1 and ENTER for player 2.
 */
 void Ball::serveBall() {
+	// Reverse the direction of x speed if serve owner is paddle 2.
 	if (pSession_->getPaddleTwo()->getPlayer()->serve_owner) {
 		x_speed_ *= -1;
 	}
 	ball_served = true;
+
+	// If ball was caught by either paddle, set the flag to false
+	pSession_->getPaddleOne()->ball_caught = false;
+	pSession_->getPaddleTwo()->ball_caught = false;
+
+	// Set the serve owner to false for both paddles
+	pSession_->getPaddleOne()->getPlayer()->serve_owner = false;
+	pSession_->getPaddleTwo()->getPlayer()->serve_owner = false;
+}
+
+// Speeds ball up by a set increment
+void Ball::speedBallUp(float increment) {
+	if (x_speed_ > 0) {
+		x_speed_ += increment;
+	}
+	else {
+		x_speed_ -= increment;
+	}
 }
 
 /*

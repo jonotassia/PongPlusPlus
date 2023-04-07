@@ -33,8 +33,9 @@ public:
 private:	
 	// Movement
 	std::uniform_int_distribution<> y_speed_generator_{ 7, 10 };
-	float x_speed_{ 1 };
+	float x_speed_{ 0.5 };
 	float y_speed_{ y_speed_generator_(MTE) / (float)10 };
+	void speedBallUp(float increment);
 
 	// Linkages
 	Session* pSession_;

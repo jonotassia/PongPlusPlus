@@ -95,14 +95,12 @@ void Session::Update() {
 	
 	if (pBall_->checkWinningPosition(pPaddleOne_)) {
 		pPaddleTwo_->getPlayer()->points++;
-		pPaddleTwo_->getPlayer()->serve_owner = true;
-		pPaddleOne_->getPlayer()->serve_owner = false;
+		pPaddleOne_->getPlayer()->serve_owner = true;
 		pGame_->resetSession();
 	}
 	else if (pBall_->checkWinningPosition(pPaddleTwo_)) {
 		pPaddleOne_->getPlayer()->points++;
-		pPaddleOne_->getPlayer()->serve_owner = true;
-		pPaddleTwo_->getPlayer()->serve_owner = false;
+		pPaddleTwo_->getPlayer()->serve_owner = true;
 		pGame_->resetSession();
 	}
 }

@@ -29,11 +29,23 @@ void Paddle::Update() {
 		case Direction::kUp:
 			if (checkBoundary(Direction::kUp)) {
 				position_y -= speed;
+
+				// Make the ball "stick" to the paddle if it has been caught
+				if (ball_caught) {
+					pSession_->getBall()->position_y -= speed;
+				}
+
 				break;
 			}
 		case Direction::kDown:
 			if (checkBoundary(Direction::kDown)) {
 				position_y += speed;
+
+				// Make the ball "stick" to the paddle if it has been caught
+				if (ball_caught) {
+					pSession_->getBall()->position_y += speed;
+				}
+
 				break;
 			}
 	}
@@ -65,29 +77,60 @@ bool Paddle::checkBoundary(Direction direction) {
 
 /*
 Catches the ball if it meets the following criteria:
-	* Ball is within 2 pixels of the paddle in the x direction
+	* Ball is within [contact leniency] pixels of the paddle in the x direction
 	* Ball is between the top and bottom of the paddle in the y direction
 */
 void Paddle::catchBall() {
+	if (catches_remaining_ < 1) {
+		return;
+	}
+	
+	// Set leniency distance from paddle
+	float CONTACT_LENIENCY = 20;
+	
 	// Extracting data points for readability before conditional expressions
 	float ball_x = pSession_->getBall()->position_x;
 	float ball_y = pSession_->getBall()->position_y;
 	auto player_num = this->getPlayer()->player_num;
 	
-	// Check boundaries against paddle one (with small leniency of 2 pixels in x direction), then catch ball.
+	// Check boundaries against paddle one (with leniency of [contact leniency] pixels), then catch ball.
 	if (player_num == Player::PlayerNum::kOne) {
-		if (ball_x < position_x + width + 2 && ball_y > position_y && ball_y < position_y + height) {
+		if (ball_x < position_x + width + CONTACT_LENIENCY 
+				&& ball_x > position_x
+				&& ball_y > position_y - CONTACT_LENIENCY 
+				&& ball_y < position_y + height + CONTACT_LENIENCY) {
+			
+			// Handle ball serving
 			pSession_->getBall()->ball_served = false;
 			pPlayer_->serve_owner = true;
 			ball_caught = true;
+
+			// Activate powerups
+			pPlayer_->powerup_available = true;
+
+			// Set ball location to the middle of the paddle
+			pSession_->getBall()->position_y = this->position_y + height / 2;
+			pSession_->getBall()->position_x = this->position_x + width + CONTACT_LENIENCY;
 		}
 	}
-	// Check boundaries against paddle two (with small leniency of 2 pixels in x direction), then catch ball.
+	// Check boundaries against paddle two (with leniency of [contact leniency] pixels), then catch ball.
 	else {
-		if (ball_x < position_x - 2 && ball_y > position_y && ball_y < position_y + height) {
+		if (ball_x > position_x - CONTACT_LENIENCY 
+				&& ball_x < position_x
+				&& ball_y > position_y - CONTACT_LENIENCY
+				&& ball_y < position_y + height + CONTACT_LENIENCY) {
+			
+			// Handle ball serving
 			pSession_->getBall()->ball_served = false;
 			pPlayer_->serve_owner = true;
 			ball_caught = true;
+
+			// Activate powerups
+			pPlayer_->powerup_available = true;
+
+			// Set ball location to the middle of the paddle
+			pSession_->getBall()->position_y = this->position_y + height / 2;
+			pSession_->getBall()->position_x = this->position_x - CONTACT_LENIENCY;
 		}
 	}
 }

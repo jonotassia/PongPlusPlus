@@ -29,6 +29,7 @@ public:
 	void serveBall();
 	void playWallBounce();
 	void playPaddleHit();
+	void transformWaveMovement();
 
 private:	
 	// Movement
@@ -36,6 +37,10 @@ private:
 	float x_speed_{ 0.5 };
 	float y_speed_{ y_speed_generator_(MTE) / (float)10 };
 	void speedBallUp(float increment);
+
+	// Confusion ball
+	float wave_amplitude{ 30 };
+	float wave_period{ 30 };
 
 	// Linkages
 	Session* pSession_;

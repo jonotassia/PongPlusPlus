@@ -23,13 +23,13 @@ Renderer::~Renderer() {
 }
 
 void Renderer::setColorScheme() {
-	switch (pGame_->color_scheme_) {
+	switch (pGame_->getSession()->active_powerup) {
 		case(PowerUps::kNone): SDL_SetRenderDrawColor(pRenderer_, 0xFF, 0xFF, 0xFF, 0xFF); break;
 		case(PowerUps::kFire): SDL_SetRenderDrawColor(pRenderer_, 0xFA, 0x8D, 0x22, 0xFF); break;
 		case(PowerUps::kIce): SDL_SetRenderDrawColor(pRenderer_, 0x27, 0xB7, 0xDE, 0xFF); break;
 		case(PowerUps::kSun): SDL_SetRenderDrawColor(pRenderer_, 0xF6, 0xFA, 0x17, 0xFF); break;
 		case(PowerUps::kShadow): SDL_SetRenderDrawColor(pRenderer_, 0x67, 0x4E, 0xA7, 0xFF); break;
-		case(PowerUps::kSniper): SDL_SetRenderDrawColor(pRenderer_, 0xF6, 0xFA, 0x17, 0xFF); break;
+		case(PowerUps::kConfusion): SDL_SetRenderDrawColor(pRenderer_, 0xFF, 0x00, 0xFF, 0xFF); break;
 	}
 }
 

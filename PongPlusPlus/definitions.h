@@ -13,7 +13,7 @@ enum class PowerUps {
 	kIce,
 	kSun,
 	kShadow,
-	kSniper
+	kConfusion
 };
 
 enum class Direction {

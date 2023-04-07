@@ -1,3 +1,5 @@
+#include <cmath>
+
 #include "paddle.h"
 #include "ball.h"
 #include "definitions.h"
@@ -14,8 +16,16 @@ Moves the ball, taking into consideration ball speed, potential direction change
 void Ball::Update() {
 	// Freeze the ball as long as it is not served
 	if (ball_served) {
-		position_x += x_speed_;
-		position_y += y_speed_;
+		// Handle powerups if trajectory impacted
+		switch (pSession_->active_powerup) {
+			case PowerUps::kConfusion:
+				transformWaveMovement();
+				break;
+			default:
+				position_x += x_speed_;
+				position_y += y_speed_;
+				break;
+		}
 
 		// Check collisions and winning positions, short circuit if one found
 		if (checkContact(pSession_->getPaddleOne())) {
@@ -71,6 +81,12 @@ bool Ball::deflectFromPaddle(Paddle* paddle) {
 			speedBallUp(0.05);
 			return true;
 		}
+
+		// If contacted by an ice ball, drop paddle speed
+		if (pSession_->active_powerup == PowerUps::kIce) {
+			paddle->speed *= 0.80;
+		}
+
 	}
 	else {
 		float paddle_x_lim = paddle->position_x;
@@ -80,6 +96,11 @@ bool Ball::deflectFromPaddle(Paddle* paddle) {
 			x_speed_ -= 2 * x_speed_;
 			speedBallUp(0.05);
 			return true;
+		}
+
+		// If contacted by an ice ball, drop paddle speed
+		if (pSession_->active_powerup == PowerUps::kIce) {
+			paddle->speed *= 0.80;
 		}
 	}
 	return false;
@@ -118,7 +139,19 @@ void Ball::serveBall() {
 	if (pSession_->getPaddleTwo()->getPlayer()->serve_owner) {
 		x_speed_ *= -1;
 	}
-	ball_served = true;
+
+	// Handle serve based on active powerup (if powerup is serve-centric)
+	switch (pSession_->active_powerup) {
+		case PowerUps::kFire:
+			// Double ball speed
+			this->x_speed_ *= 2;
+			ball_served = true;
+			break;
+		default:
+			// Normal serve
+			ball_served = true;
+			break;
+	}
 
 	// If ball was caught by either paddle, set the flag to false
 	pSession_->getPaddleOne()->ball_caught = false;
@@ -153,4 +186,14 @@ void Ball::playPaddleHit() {
 	// TODO: Play wav file for wall bounce audio
 }
 
+void Ball::transformWaveMovement() {
+	double dir = atan2(y_speed_, x_speed_);
 
+	position_x = position_x + cos(dir) * x_speed_;
+	position_y = position_y + sin(dir) * y_speed_;
+
+	const float deviation = sin(x_speed_ * M_PI / wave_period) * wave_amplitude;
+
+	position_x += sin(dir) * deviation;
+	position_y -= cos(dir) * deviation;
+}

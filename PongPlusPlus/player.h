@@ -1,6 +1,8 @@
 #ifndef PLAYER_H
 #define PLAYER_H
 
+#include "definitions.h"
+
 // Forward declaration
 class Controller;
 class Paddle;
@@ -19,10 +21,9 @@ public:
 	void setPaddle(Paddle* pPaddle) { pPaddle_ = pPaddle; }
 	
 	// Session data
-	PlayerNum player_num;
-	int cooldown_timer { 20 };
-	bool powerup_available { false };
-	bool serve_owner{ (player_num == PlayerNum::kOne) ? true : false };
+	PlayerNum player_num;							// Player's one or two
+	PowerUps selected_powerup{ PowerUps::kConfusion };  // PowerUp selected by the player
+	bool serve_owner{ (player_num == PlayerNum::kOne) ? true : false };  // Serve owner set to pOne on creation
 	int points { 0 };
 
 	// Player stats

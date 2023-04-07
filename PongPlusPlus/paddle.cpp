@@ -106,7 +106,8 @@ void Paddle::catchBall() {
 			ball_caught = true;
 
 			// Activate powerups
-			pPlayer_->powerup_available = true;
+			pSession_->active_powerup = pPlayer_->selected_powerup;
+			pSession_->powerup_owner = this;
 
 			// Set ball location to the middle of the paddle
 			pSession_->getBall()->position_y = this->position_y + height / 2;
@@ -126,7 +127,8 @@ void Paddle::catchBall() {
 			ball_caught = true;
 
 			// Activate powerups
-			pPlayer_->powerup_available = true;
+			pSession_->active_powerup = pPlayer_->selected_powerup;
+			pSession_->powerup_owner = this;
 
 			// Set ball location to the middle of the paddle
 			pSession_->getBall()->position_y = this->position_y + height / 2;

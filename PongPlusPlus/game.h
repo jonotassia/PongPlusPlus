@@ -29,9 +29,8 @@ public:
 	bool checkGameOver();
 	void resetSession();
 
-	// Public variables
-	PowerUps color_scheme_ = PowerUps::kNone;
-	float FPS_ADJUST = 1 / 60 * 1000.0f;
+	// static variables
+	constexpr static float FPS_ADJUST = 1 / 60 * 1000.0f;
 
 private:
 	// Renderer
@@ -59,6 +58,10 @@ public:
 	Ball* getBall() { return pBall_; };
 	Paddle* getPaddleOne() { return pPaddleOne_; };
 	Paddle* getPaddleTwo() { return pPaddleTwo_; };
+
+	// Gameplay
+	PowerUps active_powerup = PowerUps::kNone;
+	Paddle* powerup_owner;
 
 	// Proprietary Functions
 	void Update();

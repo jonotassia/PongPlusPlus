@@ -6,6 +6,7 @@
 
 // Forward declarations and constants
 class Game;
+class Player;
 
 class Renderer {
 public:
@@ -25,7 +26,7 @@ public:
 	void drawScore(int score, int x, int y);
 	void drawBall();
 	void drawPaddles();
-	void drawVictoryScreen();
+	void drawVictoryScreen(Player* winner, Player* loser);
 
 private:
 	SDL_Window* pWindow_ = SDL_CreateWindow(

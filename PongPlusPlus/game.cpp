@@ -50,7 +50,6 @@ void Game::Run() {
 void Game::Update(bool& running) {
 	// Check if game over. If game over, reset points of both players and draw victory screen
 	if (checkGameOver()) {
-		pRenderer_->drawVictoryScreen();
 		pPlayerOne_->points = 0;
 		pPlayerTwo_->points = 0;
 	}
@@ -66,10 +65,12 @@ void Game::resetSession() {
 bool Game::checkGameOver() {
 	if (pPlayerOne_->points == 10) {
 		pPlayerOne_->total_wins++;
+		pRenderer_->drawVictoryScreen(pPlayerOne_.get(), pPlayerTwo_.get());
 		return true;
 	}
 	else if (pPlayerTwo_->points == 10) {
 		pPlayerTwo_->total_wins++;
+		pRenderer_->drawVictoryScreen(pPlayerTwo_.get(), pPlayerOne_.get());
 		return true;
 	}
 	return false;

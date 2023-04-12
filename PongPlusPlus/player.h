@@ -10,7 +10,7 @@ class Paddle;
 class Player {
 public:
 	// Class Enums
-	enum class PlayerNum { kOne, kTwo };
+	enum class PlayerNum { kOne = 1, kTwo = 2 };
 	
 	// Constructors/Destructors
 	Player(PlayerNum num);

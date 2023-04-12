@@ -155,8 +155,48 @@ void Renderer::drawPaddles() {
 	SDL_RenderFillRect(pRenderer_, &paddle_two);
 }
 
-void Renderer::drawVictoryScreen() {
+void Renderer::drawVictoryScreen(Player* winner, Player* loser) {
 	//TODO: Draw a victory screen indicating who won and the final score
+	TTF_Init();
+
+	// Set a font style and size
+	TTF_Font* font = TTF_OpenFont("C:\\Windows\\Fonts\\Candara.ttf", 24);
+	if (!font) {
+		printf(TTF_GetError());
+	}
+
+	// Specify text color
+	SDL_Color White = { 255, 255, 255 };
+
+	// Write winner text
+	std::string message_string = "Player " + std::to_string(static_cast<int>(winner->player_num)) + " Wins";
+
+	// as TTF_RenderText_Solid could only be used on
+	// SDL_Surface then you have to create the surface first
+	SDL_Surface* winnerMessage =
+		TTF_RenderText_Solid(font, message_string.c_str(), White);
+
+	// Convert to texture
+	SDL_Texture* Message = SDL_CreateTextureFromSurface(pRenderer_, winnerMessage);
+
+	// Create a rect that functions as a text box
+	SDL_Rect Message_rect;
+	Message_rect.x = WINDOW_WIDTH / 4;
+	Message_rect.y = WINDOW_HEIGHT / 2;
+	Message_rect.w = WINDOW_WIDTH / 2;
+	Message_rect.h = WINDOW_HEIGHT / 4;
+
+	// Render the message into the text box
+	SDL_RenderCopy(pRenderer_, Message, NULL, &Message_rect);
+	SDL_RenderPresent(pRenderer_);
+
+	// Sleep for a couple seconds to show score
+	SDL_Delay(3000);
+
+	SDL_FreeSurface(winnerMessage);
+	SDL_DestroyTexture(Message);
+	TTF_CloseFont(font);
+	TTF_Quit();
 }
 
 void Renderer::drawScreen() {

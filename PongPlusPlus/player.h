@@ -22,7 +22,7 @@ public:
 	
 	// Session data
 	PlayerNum player_num;							// Player's one or two
-	PowerUps selected_powerup{ PowerUps::kConfusion };  // PowerUp selected by the player
+	PowerUps selected_powerup{ PowerUps::kIce };  // PowerUp selected by the player
 	bool serve_owner{ (player_num == PlayerNum::kOne) ? true : false };  // Serve owner set to pOne on creation
 	int points { 0 };
 

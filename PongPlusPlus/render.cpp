@@ -22,6 +22,7 @@ Renderer::~Renderer() {
 	SDL_Quit();
 }
 
+// Sets color based on current active powerup
 void Renderer::setColorScheme() {
 	switch (pGame_->getSession()->active_powerup) {
 		case(PowerUps::kNone): SDL_SetRenderDrawColor(pRenderer_, 0xFF, 0xFF, 0xFF, 0xFF); break;
@@ -30,6 +31,56 @@ void Renderer::setColorScheme() {
 		case(PowerUps::kSun): SDL_SetRenderDrawColor(pRenderer_, 0xF6, 0xFA, 0x17, 0xFF); break;
 		case(PowerUps::kShadow): SDL_SetRenderDrawColor(pRenderer_, 0x67, 0x4E, 0xA7, 0xFF); break;
 		case(PowerUps::kConfusion): SDL_SetRenderDrawColor(pRenderer_, 0xFF, 0x00, 0xFF, 0xFF); break;
+	}
+}
+
+/*
+Draws background if appropriate. In general, background will just be black except in the below scenarios:
+	* Shadow ball: Opponents half of the screen turns same color as the ball
+	* Sun ball: Entire screen turns similar color to ball
+*/
+void Renderer::drawBackground() {
+	// Returns if no powerup active
+	if (pGame_->getSession()->active_powerup == PowerUps::kNone) {
+		return;
+	}
+	
+	switch (pGame_->getSession()->active_powerup) {
+		case PowerUps::kShadow:
+			// Define rectangle to shade other players half
+			SDL_Rect opp_paddle_zone;
+			opp_paddle_zone.h = WINDOW_HEIGHT;
+			opp_paddle_zone.y = 0;
+
+			// Depending on who activated the powerup, set the correct half of the screen
+			if (pGame_->getSession()->powerup_owner == pGame_->getSession()->getPaddleOne()) {
+				opp_paddle_zone.x = WINDOW_WIDTH - WINDOW_WIDTH / 30;
+				opp_paddle_zone.w = WINDOW_WIDTH / 30;
+			}
+			else {
+				opp_paddle_zone.x = 0;
+				opp_paddle_zone.w = WINDOW_WIDTH / 30;
+			}
+			// Fill rectangle
+			SDL_RenderFillRect(pRenderer_, &opp_paddle_zone);
+			break;
+
+		case PowerUps::kSun:
+			// Set the color scheme to a slightly brighter shade of the default Sun color
+			SDL_SetRenderDrawColor(pRenderer_, 0xFF, 0xFF, 0xFF, 0xAA);
+
+			// Create a rectangle the size of the screen and fill it
+			SDL_Rect field;
+			field.w = WINDOW_WIDTH;
+			field.h = WINDOW_HEIGHT;
+			field.y = 0;
+			field.x = 0;
+
+			SDL_RenderFillRect(pRenderer_, &field);
+			break;
+
+		default:
+			break;
 	}
 }
 
@@ -114,6 +165,7 @@ void Renderer::drawScreen() {
 	SDL_RenderClear(pRenderer_);
 
 	// Rendering for each frame below. Color set based on current power up
+	drawBackground();
 	setColorScheme();
 	drawNet();
 	drawPaddles();

@@ -37,22 +37,39 @@ void Ball::Update() {
 		if (pSession_->active_powerup == PowerUps::kConfusion) {
 			switch (contact) {
 				case ContactEntity::kBottom:
+					// Move ball to top of screen with buffer
 					wave_distance = 0;
 					wave_init_x = position_x;
-					wave_init_y = position_y;
+					break;
 				case ContactEntity::kTop:
+					// Move ball to bottom of screen with buffer
+					wave_distance = 0;
+					wave_init_x = position_x;
+					break;
+				case ContactEntity::kPaddleOne:	
+					// Make sure speed is in right direction
+					if (x_speed_ < 0) {
+						x_speed_ *= -1;
+					}
+					
 					wave_distance = 0;
 					wave_init_x = position_x;
 					wave_init_y = position_y;
-				case ContactEntity::kPaddleOne:
-					wave_distance = 0;
-					wave_init_x = position_x;
-					wave_init_y = position_y;
+					break;
 				case ContactEntity::kPaddleTwo:
+					// Make sure speed is in right direction
+					if (x_speed_ > 0) {
+						x_speed_ *= -1;
+					}
+					
 					wave_distance = 0;
 					wave_init_x = position_x;
 					wave_init_y = position_y;
+					break;
 				default:
+					wave_distance = 0;
+					wave_init_x = position_x;
+					wave_init_y = position_y;
 					break;
 			}
 		}
@@ -69,12 +86,12 @@ Short circuits if any contacts
 Ball::ContactEntity Ball::checkContact() {
 	// Check against top and bottom walls for bounces, short circuit if any contacts
 	if (position_y <= 0)  {
-		y_speed_ *= -1;
+		y_speed_ -= 2 * y_speed_;
 		playWallBounce();
 		return ContactEntity::kTop;
 	}
 	else if (position_y >= WINDOW_HEIGHT) {
-		y_speed_ *= -1;
+		y_speed_ -= 2 * y_speed_;
 		playWallBounce();
 		return ContactEntity::kBottom;
 	}
@@ -96,6 +113,7 @@ Checks if the ball should deflect from a paddle using the following logic:
 	* Ball is between y_max and y_min
 	* If paddle one, ball is greater than x_max
 	* If paddle two, ball is less than x_min
+Ball speed increases on each hit, and paddle is slowed down if hit by ice ball
 */
 bool Ball::deflectFromPaddle(Paddle* paddle) {
 	// Calculate paddle boundaries
@@ -111,14 +129,14 @@ bool Ball::deflectFromPaddle(Paddle* paddle) {
 			// Reverse speed and speed up
 			x_speed_ *= -1;
 			speedBallUp(0.05);
+
+			// If contacted by an ice ball, drop paddle speed
+			if (pSession_->active_powerup == PowerUps::kIce) {
+				paddle->speed *= 0.80;
+			}
+
 			return true;
 		}
-
-		// If contacted by an ice ball, drop paddle speed
-		if (pSession_->active_powerup == PowerUps::kIce) {
-			paddle->speed *= 0.80;
-		}
-
 	}
 	else {
 		float paddle_x_lim = paddle->position_x;
@@ -127,12 +145,13 @@ bool Ball::deflectFromPaddle(Paddle* paddle) {
 			// Reverse speed and speed up
 			x_speed_ *= -1;
 			speedBallUp(0.05);
-			return true;
-		}
 
-		// If contacted by an ice ball, drop paddle speed
-		if (pSession_->active_powerup == PowerUps::kIce) {
-			paddle->speed *= 0.80;
+			// If contacted by an ice ball, drop paddle speed
+			if (pSession_->active_powerup == PowerUps::kIce) {
+				paddle->speed *= 0.80;
+			}
+
+			return true;
 		}
 	}
 	return false;

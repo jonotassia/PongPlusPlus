@@ -19,6 +19,7 @@ public:
 
 	// Proprietary Functions
 	void setColorScheme();
+	void drawBackground();
 	void drawNet();
 	void drawScreen();
 	void drawScore(int score, int x, int y);

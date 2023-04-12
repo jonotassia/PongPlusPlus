@@ -79,6 +79,7 @@ bool Paddle::checkBoundary(Direction direction) {
 Catches the ball if it meets the following criteria:
 	* Ball is within [contact leniency] pixels of the paddle in the x direction
 	* Ball is between the top and bottom of the paddle in the y direction
+If ball is not caught, the paddle will shrink by 10%.
 */
 void Paddle::catchBall() {
 	if (catches_remaining_ < 1) {
@@ -112,7 +113,11 @@ void Paddle::catchBall() {
 			// Set ball location to the middle of the paddle
 			pSession_->getBall()->position_y = this->position_y + height / 2;
 			pSession_->getBall()->position_x = this->position_x + width + CONTACT_LENIENCY;
+
+			// Decrement catches remaining
+			this->catches_remaining_--;
 		}
+		shrinkPaddle(0.9);
 	}
 	// Check boundaries against paddle two (with leniency of [contact leniency] pixels), then catch ball.
 	else {
@@ -133,7 +138,24 @@ void Paddle::catchBall() {
 			// Set ball location to the middle of the paddle
 			pSession_->getBall()->position_y = this->position_y + height / 2;
 			pSession_->getBall()->position_x = this->position_x - CONTACT_LENIENCY;
+
+			// Decrement catches remaining
+			this->catches_remaining_--;
 		}
+		shrinkPaddle(0.9);
+	}
+
+}
+
+/*
+Shrinks the paddle by [percent]. Primary use case is to punish users when they try to spam catch.
+Minimum is set to 30% of max height.
+*/
+void Paddle::shrinkPaddle(float percent) {
+	if (height > init_height * 0.3) {
+		float reduction = this->height * (1 - percent);
+		this->height -= reduction;
+		this->position_y += reduction / 2;
 	}
 }
 

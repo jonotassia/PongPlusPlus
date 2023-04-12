@@ -54,12 +54,12 @@ void Renderer::drawBackground() {
 
 			// Depending on who activated the powerup, set the correct half of the screen
 			if (pGame_->getSession()->powerup_owner == pGame_->getSession()->getPaddleOne()) {
-				opp_paddle_zone.x = WINDOW_WIDTH - WINDOW_WIDTH / 30;
-				opp_paddle_zone.w = WINDOW_WIDTH / 30;
+				opp_paddle_zone.x = WINDOW_WIDTH - Paddle::init_width * 2;
+				opp_paddle_zone.w = Paddle::init_width * 2;
 			}
 			else {
 				opp_paddle_zone.x = 0;
-				opp_paddle_zone.w = WINDOW_WIDTH / 30;
+				opp_paddle_zone.w = Paddle::init_width * 2;
 			}
 			// Fill rectangle
 			SDL_RenderFillRect(pRenderer_, &opp_paddle_zone);

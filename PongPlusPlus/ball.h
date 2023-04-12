@@ -36,7 +36,7 @@ public:
 
 private:	
 	// Movement
-	std::uniform_int_distribution<> y_speed_generator_{ 3, 7 };
+	std::uniform_int_distribution<> y_speed_generator_{ 3, 6 };
 	float x_speed_{ 0 };
 	float y_speed_{ y_speed_generator_(MTE) / (float)10 };
 	void speedBallUp(float increment);

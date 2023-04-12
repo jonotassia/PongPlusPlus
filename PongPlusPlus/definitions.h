@@ -8,12 +8,12 @@ const int WINDOW_WIDTH = 1280;
 const int WINDOW_HEIGHT = 720;
 
 enum class PowerUps {
-	kNone,
-	kFire,
-	kIce,
-	kSun,
-	kShadow,
-	kConfusion
+	kNone = 0,
+	kFire = 1,
+	kIce = 2,
+	kSun = 3,
+	kShadow = 4,
+	kConfusion = 5
 };
 
 enum class Direction {

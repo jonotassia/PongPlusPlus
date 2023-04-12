@@ -23,14 +23,14 @@ Renderer::~Renderer() {
 }
 
 // Sets color based on current active powerup
-void Renderer::setColorScheme() {
-	switch (pGame_->getSession()->active_powerup) {
-		case(PowerUps::kNone): SDL_SetRenderDrawColor(pRenderer_, 0xFF, 0xFF, 0xFF, 0xFF); break;
-		case(PowerUps::kFire): SDL_SetRenderDrawColor(pRenderer_, 0xFA, 0x8D, 0x22, 0xFF); break;
-		case(PowerUps::kIce): SDL_SetRenderDrawColor(pRenderer_, 0x27, 0xB7, 0xDE, 0xFF); break;
-		case(PowerUps::kSun): SDL_SetRenderDrawColor(pRenderer_, 0xF6, 0xFA, 0x17, 0xFF); break;
-		case(PowerUps::kShadow): SDL_SetRenderDrawColor(pRenderer_, 0x67, 0x4E, 0xA7, 0xFF); break;
-		case(PowerUps::kConfusion): SDL_SetRenderDrawColor(pRenderer_, 0xFF, 0x00, 0xFF, 0xFF); break;
+void Renderer::setColorScheme(PowerUps powerup) {
+	switch (powerup) {
+		case(PowerUps::kNone): SDL_SetRenderDrawColor(pRenderer_, white.r, white.g, white.b, white.a); break;
+		case(PowerUps::kFire): SDL_SetRenderDrawColor(pRenderer_, fire.r, fire.g, fire.b, fire.a); break;
+		case(PowerUps::kIce): SDL_SetRenderDrawColor(pRenderer_, ice.r, ice.g, ice.b, ice.a); break;
+		case(PowerUps::kSun): SDL_SetRenderDrawColor(pRenderer_, sun.r, sun.g, sun.b, sun.a); break;
+		case(PowerUps::kShadow): SDL_SetRenderDrawColor(pRenderer_, shadow.r, shadow.g, shadow.b, shadow.a); break;
+		case(PowerUps::kConfusion): SDL_SetRenderDrawColor(pRenderer_, confusion.r, confusion.g, confusion.b, confusion.a); break;
 	}
 }
 
@@ -47,10 +47,13 @@ void Renderer::drawBackground() {
 	
 	switch (pGame_->getSession()->active_powerup) {
 		case PowerUps::kShadow:
+			// Set the color scheme to shadow
+			SDL_SetRenderDrawColor(pRenderer_, shadow.r, shadow.g, shadow.b, shadow.a);
+			
 			// Define rectangle to shade other players half
 			SDL_Rect opp_paddle_zone;
-			opp_paddle_zone.h = WINDOW_HEIGHT;
 			opp_paddle_zone.y = 0;
+			opp_paddle_zone.h = WINDOW_HEIGHT;
 
 			// Depending on who activated the powerup, set the correct half of the screen
 			if (pGame_->getSession()->powerup_owner == pGame_->getSession()->getPaddleOne()) {
@@ -66,8 +69,8 @@ void Renderer::drawBackground() {
 			break;
 
 		case PowerUps::kSun:
-			// Set the color scheme to a slightly brighter shade of the default Sun color
-			SDL_SetRenderDrawColor(pRenderer_, 0xFF, 0xFF, 0xFF, 0xAA);
+			// Set the color scheme to white
+			SDL_SetRenderDrawColor(pRenderer_, white.r, white.g, white.b, 0xAA);
 
 			// Create a rectangle the size of the screen and fill it
 			SDL_Rect field;
@@ -155,8 +158,41 @@ void Renderer::drawPaddles() {
 	SDL_RenderFillRect(pRenderer_, &paddle_two);
 }
 
+void Renderer::drawPowerups() {
+	// Create SDL rectangles for each paddle
+	SDL_Rect powerup_one;
+	powerup_one.x = WINDOW_WIDTH / 2 - Paddle::init_height;
+	powerup_one.y = 0;
+	powerup_one.w = Paddle::init_height;
+	powerup_one.h = Paddle::init_width;
+
+	SDL_Rect powerup_two;
+	powerup_two.x = WINDOW_WIDTH / 2;
+	powerup_two.y = 0;
+	powerup_two.w = Paddle::init_height;
+	powerup_two.h = Paddle::init_width;
+
+	// Render a filled rectangle with color from player one if powerup available. Otherwise, make it hollow.
+	setColorScheme(pGame_->getPlayerOne()->selected_powerup);
+	if (pGame_->getSession()->getPaddleOne()->powerup_available) {
+		SDL_RenderFillRect(pRenderer_, &powerup_one);
+	}
+	else {
+		SDL_RenderDrawRect(pRenderer_, &powerup_one);
+	}
+
+	// Render a filled rectangle with color from player two if powerup available. Otherwise, make it hollow.
+	setColorScheme(pGame_->getPlayerTwo()->selected_powerup);
+	if (pGame_->getSession()->getPaddleTwo()->powerup_available) {
+		SDL_RenderFillRect(pRenderer_, &powerup_two);
+	}
+	else {
+		SDL_RenderDrawRect(pRenderer_, &powerup_two);
+	}
+	
+}
+
 void Renderer::drawVictoryScreen(Player* winner, Player* loser) {
-	//TODO: Draw a victory screen indicating who won and the final score
 	TTF_Init();
 
 	// Set a font style and size
@@ -204,9 +240,14 @@ void Renderer::drawScreen() {
 	SDL_SetRenderDrawColor(pRenderer_, 0x0, 0x0, 0x0, 0xFF);
 	SDL_RenderClear(pRenderer_);
 
-	// Rendering for each frame below. Color set based on current power up
+	// Rendering for each frame below.
+
+	// Color-independant of current powerup
 	drawBackground();
-	setColorScheme();
+	drawPowerups();
+
+	// Color set based on current active power up
+	setColorScheme(pGame_->getSession()->active_powerup);
 	drawNet();
 	drawPaddles();
 	drawBall();

@@ -46,7 +46,7 @@ private:
 	float wave_period{ 30 };
 	float wave_distance{ 0 };
 	float wave_direction{ 0 };
-	double wave_speed{ sqrt(pow(x_speed_, 2) + pow(y_speed_, 2)) };
+	double wave_speed{ 0 };
 	float wave_init_x{ 0 };
 	float wave_init_y{ 0 };
 

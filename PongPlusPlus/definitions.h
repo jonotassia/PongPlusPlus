@@ -24,6 +24,6 @@ enum class Direction {
 	kRight
 };
 
-static std::mt19937 MTE{};
+static std::mt19937 MTE(time(nullptr));
 
 #endif // !DEFINITIONS_H

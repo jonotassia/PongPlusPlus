@@ -66,11 +66,6 @@ void Ball::Update() {
 					wave_init_x = position_x;
 					wave_init_y = position_y;
 					break;
-				default:
-					wave_distance = 0;
-					wave_init_x = position_x;
-					wave_init_y = position_y;
-					break;
 			}
 		}
 	}

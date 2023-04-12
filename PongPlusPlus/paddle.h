@@ -32,6 +32,7 @@ public:
 
 	// Gameplay
 	bool ball_caught{ false };   // Indicates if this paddle has caught the ball
+	bool powerup_available{ true };  // Indicates if the player can still use their powerup
 
 	// Proprietary functions
 	void Update();

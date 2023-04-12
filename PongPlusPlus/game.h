@@ -61,7 +61,7 @@ public:
 
 	// Gameplay
 	PowerUps active_powerup = PowerUps::kNone;
-	Paddle* powerup_owner;
+	Paddle* powerup_owner = nullptr;
 
 	// Proprietary Functions
 	void Update();

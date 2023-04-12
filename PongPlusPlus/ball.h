@@ -11,6 +11,9 @@ class Ball {
 public:
 	// Constructor/Destructor;
 	Ball(Session* pSession);
+
+	// Class enum
+	enum class ContactEntity{kNone, kTop, kBottom, kPaddleOne, kPaddleTwo};
 	
 	// Geometry
 	float width{ 5 };
@@ -23,7 +26,7 @@ public:
 
 	// Proprietary functions
 	void Update();
-	bool checkContact(Paddle* paddle);
+	ContactEntity checkContact();
 	bool checkWinningPosition(Paddle* paddle);
 	bool deflectFromPaddle(Paddle* paddle);
 	void serveBall();
@@ -33,14 +36,19 @@ public:
 
 private:	
 	// Movement
-	std::uniform_int_distribution<> y_speed_generator_{ 7, 10 };
-	float x_speed_{ 0.5 };
+	std::uniform_int_distribution<> y_speed_generator_{ 3, 7 };
+	float x_speed_{ 0 };
 	float y_speed_{ y_speed_generator_(MTE) / (float)10 };
 	void speedBallUp(float increment);
 
 	// Confusion ball
 	float wave_amplitude{ 30 };
 	float wave_period{ 30 };
+	float wave_distance{ 0 };
+	float wave_direction{ 0 };
+	double wave_speed{ sqrt(pow(x_speed_, 2) + pow(y_speed_, 2)) };
+	float wave_init_x{ 0 };
+	float wave_init_y{ 0 };
 
 	// Linkages
 	Session* pSession_;

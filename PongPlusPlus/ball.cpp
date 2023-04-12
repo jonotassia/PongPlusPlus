@@ -8,10 +8,13 @@
 
 Ball::Ball(Session* pSession) {
 	pSession_ = pSession;
+
+	// Handle serve direction based on serve owner
+	x_speed_ = (pSession_->getPaddleOne()->getPlayer()->serve_owner) ? 0.5 : -0.5;
 }
 
 /*
-Moves the ball, taking into consideration ball speed, potential direction changes from contact, and winning points
+Moves the ball, taking into consideration ball speed, potential direction changes from contact, and powerups
 */
 void Ball::Update() {
 	// Freeze the ball as long as it is not served
@@ -27,12 +30,31 @@ void Ball::Update() {
 				break;
 		}
 
-		// Check collisions and winning positions, short circuit if one found
-		if (checkContact(pSession_->getPaddleOne())) {
-			return;
-		}
-		else if (checkContact(pSession_->getPaddleTwo())) {
-			return;
+		// Check collisions and winning positions
+		ContactEntity contact = checkContact();
+
+		// If the active powerup is ConfuseBall, set wave parameters based on contact point
+		if (pSession_->active_powerup == PowerUps::kConfusion) {
+			switch (contact) {
+				case ContactEntity::kBottom:
+					wave_distance = 0;
+					wave_init_x = position_x;
+					wave_init_y = position_y;
+				case ContactEntity::kTop:
+					wave_distance = 0;
+					wave_init_x = position_x;
+					wave_init_y = position_y;
+				case ContactEntity::kPaddleOne:
+					wave_distance = 0;
+					wave_init_x = position_x;
+					wave_init_y = position_y;
+				case ContactEntity::kPaddleTwo:
+					wave_distance = 0;
+					wave_init_x = position_x;
+					wave_init_y = position_y;
+				default:
+					break;
+			}
 		}
 	}
 }
@@ -44,19 +66,29 @@ Checks if the ball should deflect from a wall or paddle using the following logi
 	* Ball has not contacted a paddle
 Short circuits if any contacts
 */
-bool Ball::checkContact(Paddle* paddle) {
+Ball::ContactEntity Ball::checkContact() {
 	// Check against top and bottom walls for bounces, short circuit if any contacts
-	if (position_y <= 0 || position_y >= WINDOW_HEIGHT) {
-		y_speed_ -= 2 * y_speed_;
+	if (position_y <= 0)  {
+		y_speed_ *= -1;
 		playWallBounce();
-		return true;
+		return ContactEntity::kTop;
+	}
+	else if (position_y >= WINDOW_HEIGHT) {
+		y_speed_ *= -1;
+		playWallBounce();
+		return ContactEntity::kBottom;
 	}
 	// Check for collision against a paddle. Short circuit if paddle contacted to save processing
-	else if (deflectFromPaddle(paddle)) {
+	else if (deflectFromPaddle(pSession_->getPaddleOne())) {
 		playPaddleHit();
-		return true;
+		return ContactEntity::kPaddleOne;
 	}
-	return false;
+	else if (deflectFromPaddle(pSession_->getPaddleTwo())) {
+		playPaddleHit();
+		return ContactEntity::kPaddleTwo;
+	}
+
+	return ContactEntity::kNone;
 }
 
 /*
@@ -77,7 +109,7 @@ bool Ball::deflectFromPaddle(Paddle* paddle) {
 
 		if (position_y >= paddle_y_min && position_y <= paddle_y_max && position_x <= paddle_x_lim) {
 			// Reverse speed and speed up
-			x_speed_ -= 2 * x_speed_;
+			x_speed_ *= -1;
 			speedBallUp(0.05);
 			return true;
 		}
@@ -93,7 +125,7 @@ bool Ball::deflectFromPaddle(Paddle* paddle) {
 		// Check boundaries against paddle two, then inverse x-speed
 		if (position_y >= paddle_y_min && position_y <= paddle_y_max && position_x >= paddle_x_lim) {
 			// Reverse speed and speed up
-			x_speed_ -= 2 * x_speed_;
+			x_speed_ *= -1;
 			speedBallUp(0.05);
 			return true;
 		}
@@ -135,23 +167,21 @@ Sets the ball served flag to true, which will begin ball movement.
 Typically controlled by SPACE BAR for player 1 and ENTER for player 2.
 */
 void Ball::serveBall() {
-	// Reverse the direction of x speed if serve owner is paddle 2.
-	if (pSession_->getPaddleTwo()->getPlayer()->serve_owner) {
-		x_speed_ *= -1;
-	}
-
 	// Handle serve based on active powerup (if powerup is serve-centric)
 	switch (pSession_->active_powerup) {
 		case PowerUps::kFire:
 			// Double ball speed
 			this->x_speed_ *= 2;
-			ball_served = true;
+			break;
+		case PowerUps::kConfusion:
+			wave_init_x = position_x;
+			wave_init_y = position_y;
 			break;
 		default:
 			// Normal serve
-			ball_served = true;
 			break;
 	}
+	ball_served = true;
 
 	// If ball was caught by either paddle, set the flag to false
 	pSession_->getPaddleOne()->ball_caught = false;
@@ -186,14 +216,23 @@ void Ball::playPaddleHit() {
 	// TODO: Play wav file for wall bounce audio
 }
 
+/*
+When ConfusionBall is active, ball control is taken over by this function. 
+The ball's movement is controlled based on position now rather than speed.
+*/
 void Ball::transformWaveMovement() {
-	double dir = atan2(y_speed_, x_speed_);
+	// Calculate angle and speed of ball
+	wave_direction = atan2(y_speed_, x_speed_);
+	wave_speed = sqrt(pow(x_speed_, 2) + pow(y_speed_, 2));
+	
+	// Move ball based on wave details
+	wave_distance += wave_speed;
+	position_x = wave_init_x + cos(wave_direction) * wave_distance;
+	position_y = wave_init_y + sin(wave_direction) * wave_distance;
 
-	position_x = position_x + cos(dir) * x_speed_;
-	position_y = position_y + sin(dir) * y_speed_;
+	// Adjust the new locatiob based on wave position
+	const float deviation = sin(wave_distance * M_PI / wave_period) * wave_amplitude;
 
-	const float deviation = sin(x_speed_ * M_PI / wave_period) * wave_amplitude;
-
-	position_x += sin(dir) * deviation;
-	position_y -= cos(dir) * deviation;
+	position_x += sin(wave_direction) * deviation;
+	position_y -= cos(wave_direction) * deviation;
 }

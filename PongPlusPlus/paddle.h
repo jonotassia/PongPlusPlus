@@ -15,6 +15,7 @@ public:
 	// Static class variables
 	static constexpr float init_height{ WINDOW_HEIGHT / 6 };
 	static constexpr float init_width{ WINDOW_WIDTH / 60 };
+	static constexpr float CONTACT_LENIENCY{ 20 };
 	
 	// Getters/Setters
 	void setPlayer(Player* pPlayer) { pPlayer_ = pPlayer; };
@@ -39,6 +40,7 @@ public:
 	bool checkBoundary(Direction direction);
 	void catchBall();
 	void resetDirection();
+	void activatePowerup();
 	void shrinkPaddle(float percent);
 
 private:

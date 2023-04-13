@@ -86,12 +86,10 @@ void Paddle::catchBall() {
 		return;
 	}
 	
-	// Set leniency distance from paddle
-	float CONTACT_LENIENCY = 20;
-	
 	// Extracting data points for readability before conditional expressions
-	float ball_x = pSession_->getBall()->position_x;
-	float ball_y = pSession_->getBall()->position_y;
+	Ball* ball = pSession_->getBall();
+	float ball_x = ball->position_x;
+	float ball_y = ball->position_y;
 	auto player_num = this->getPlayer()->player_num;
 	
 	// Check boundaries against paddle one (with leniency of [contact leniency] pixels), then catch ball.
@@ -101,22 +99,16 @@ void Paddle::catchBall() {
 				&& ball_y > position_y - CONTACT_LENIENCY 
 				&& ball_y < position_y + height + CONTACT_LENIENCY) {
 			
-			// Handle ball serving
-			pSession_->getBall()->ball_served = false;
-			pPlayer_->serve_owner = true;
-			ball_caught = true;
-
-			// Activate powerups
-			pSession_->active_powerup = pPlayer_->selected_powerup;
-			this->powerup_available = false;
-			pSession_->powerup_owner = this;
+			this->activatePowerup();
 
 			// Set ball location to the middle of the paddle
-			pSession_->getBall()->position_y = this->position_y + height / 2;
-			pSession_->getBall()->position_x = this->position_x + width + CONTACT_LENIENCY;
+			ball->position_y = this->position_y + height / 2;
+			ball->position_x = this->position_x + width + CONTACT_LENIENCY;
 
-			// Decrement catches remaining
-			this->catches_remaining_--;
+			// Reset ball x-velocity to ensure it serves correct direction
+			if (ball->x_speed_ < 0) {
+				ball->x_speed_ *= -1;
+			}
 		}
 		shrinkPaddle(0.9);
 	}
@@ -127,26 +119,39 @@ void Paddle::catchBall() {
 				&& ball_y > position_y - CONTACT_LENIENCY
 				&& ball_y < position_y + height + CONTACT_LENIENCY) {
 			
-			// Handle ball serving
-			pSession_->getBall()->ball_served = false;
-			pPlayer_->serve_owner = true;
-			ball_caught = true;
-
-			// Activate powerups
-			pSession_->active_powerup = pPlayer_->selected_powerup;
-			this->powerup_available = false;
-			pSession_->powerup_owner = this;
+			this->activatePowerup();
 
 			// Set ball location to the middle of the paddle
-			pSession_->getBall()->position_y = this->position_y + height / 2;
-			pSession_->getBall()->position_x = this->position_x - CONTACT_LENIENCY;
+			ball->position_y = this->position_y + height / 2;
+			ball->position_x = this->position_x - CONTACT_LENIENCY;
 
-			// Decrement catches remaining
-			this->catches_remaining_--;
+			// Reset ball x-velocity to ensure it serves correct direction
+			if (ball->x_speed_ > 0) {
+				ball->x_speed_ *= -1;
+			}
 		}
 		shrinkPaddle(0.9);
 	}
+}
 
+/*
+Responsible for controlling catch action of the paddle and the ball:
+	* Sets the ball serve
+	* Uses the session to set the active powerup
+	* Sticks the ball to the middle of the paddle while waiting to serve
+	* Decrements remaining catches
+*/
+void Paddle::activatePowerup() {
+	// Handle ball serving
+	pSession_->getBall()->ball_served = false;
+	pPlayer_->serve_owner = true;
+	ball_caught = true;
+
+	// Activate powerup
+	pSession_->activatePowerup(pPlayer_->selected_powerup, this);
+
+	// Decrement catches remaining
+	this->catches_remaining_--;
 }
 
 /*

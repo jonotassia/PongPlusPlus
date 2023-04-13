@@ -21,6 +21,9 @@ public:
 	float position_x { WINDOW_WIDTH / 2 - width / 2 };  // X Location of top-left corner
 	float position_y { WINDOW_HEIGHT / 2 - height / 2};  // Y Location of top-left corner
 
+	// Movement
+	float x_speed_{ 0 };
+
 	// Serve ball tracker
 	bool ball_served = false;
 
@@ -33,13 +36,12 @@ public:
 	void playWallBounce();
 	void playPaddleHit();
 	void transformWaveMovement();
+	void speedBallUp(float increment);
 
 private:	
 	// Movement
-	std::uniform_int_distribution<> y_speed_generator_{ 3, 6 };
-	float x_speed_{ 0 };
+	std::uniform_int_distribution<> y_speed_generator_{ 3, 6 };	
 	float y_speed_{ y_speed_generator_(MTE) / (float)10 };
-	void speedBallUp(float increment);
 
 	// Confusion ball
 	float wave_amplitude{ 30 };

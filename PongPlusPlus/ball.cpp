@@ -10,7 +10,7 @@ Ball::Ball(Session* pSession) {
 	pSession_ = pSession;
 
 	// Handle serve direction based on serve owner
-	x_speed_ = (pSession_->getPaddleOne()->getPlayer()->serve_owner) ? 0.5 : -0.5;
+	x_speed_ = (pSession_->getPaddleOne()->getPlayer()->serve_owner) ? 0.75 : -0.75;
 }
 
 /*
@@ -81,22 +81,24 @@ Short circuits if any contacts
 Ball::ContactEntity Ball::checkContact() {
 	// Check against top and bottom walls for bounces, short circuit if any contacts
 	if (position_y <= 0)  {
-		y_speed_ -= 2 * y_speed_;
+		y_speed_ *= -1;
 		playWallBounce();
 		return ContactEntity::kTop;
 	}
 	else if (position_y >= WINDOW_HEIGHT) {
-		y_speed_ -= 2 * y_speed_;
+		y_speed_ *= -1;
 		playWallBounce();
 		return ContactEntity::kBottom;
 	}
 	// Check for collision against a paddle. Short circuit if paddle contacted to save processing
 	else if (deflectFromPaddle(pSession_->getPaddleOne())) {
 		playPaddleHit();
+		pSession_->powerup_duration--;
 		return ContactEntity::kPaddleOne;
 	}
 	else if (deflectFromPaddle(pSession_->getPaddleTwo())) {
 		playPaddleHit();
+		pSession_->powerup_duration--;
 		return ContactEntity::kPaddleTwo;
 	}
 
@@ -111,45 +113,49 @@ Checks if the ball should deflect from a paddle using the following logic:
 Ball speed increases on each hit, and paddle is slowed down if hit by ice ball
 */
 bool Ball::deflectFromPaddle(Paddle* paddle) {
+	bool deflected = false;
+	
 	// Calculate paddle boundaries
 	float paddle_y_min = paddle->position_y;
 	float paddle_y_max = paddle->position_y + paddle->height;
 
-	// TODO: Optimize these checks so that we don't have to test separately for kOne and kTwo
+	// Check boundaries against paddle one
 	if (paddle->getPlayer()->player_num == Player::PlayerNum::kOne) {
-		// Check boundaries against paddle one, then inverse x-speed
 		float paddle_x_lim = paddle->position_x + paddle->width;
 
 		if (position_y >= paddle_y_min && position_y <= paddle_y_max && position_x <= paddle_x_lim) {
-			// Reverse speed and speed up
-			x_speed_ *= -1;
-			speedBallUp(0.05);
-
-			// If contacted by an ice ball, drop paddle speed
-			if (pSession_->active_powerup == PowerUps::kIce) {
-				paddle->speed *= 0.80;
-			}
-
-			return true;
+			deflected = true;
 		}
 	}
+	// Check boundaries against paddle two
 	else {
 		float paddle_x_lim = paddle->position_x;
-		// Check boundaries against paddle two, then inverse x-speed
 		if (position_y >= paddle_y_min && position_y <= paddle_y_max && position_x >= paddle_x_lim) {
-			// Reverse speed and speed up
-			x_speed_ *= -1;
-			speedBallUp(0.05);
-
-			// If contacted by an ice ball, drop paddle speed
-			if (pSession_->active_powerup == PowerUps::kIce) {
-				paddle->speed *= 0.80;
-			}
-
-			return true;
+			deflected = true;
 		}
 	}
-	return false;
+	// If the ball was deflected, update game objects based on powerups
+	if (deflected) {
+		switch (pSession_->active_powerup) {
+			case PowerUps::kFire:
+				// Increase ball speed by 10% per hit
+				x_speed_ *= -1;
+				speedBallUp(0.1);
+				break;
+			case PowerUps::kIce:
+				// Slowdown paddle on hit
+				x_speed_ *= -1;
+				speedBallUp(0.05);
+				paddle->speed *= 0.80;
+				break;
+			default:
+				// Increase ball speed by 5% per hit
+				x_speed_ *= -1;
+				speedBallUp(0.05);
+				break;
+		}
+	}
+	return deflected;
 }
 
 /*
@@ -208,11 +214,20 @@ void Ball::serveBall() {
 
 // Speeds ball up by a set increment
 void Ball::speedBallUp(float increment) {
+	// Update ball x speed
 	if (x_speed_ > 0) {
 		x_speed_ += increment;
 	}
 	else {
 		x_speed_ -= increment;
+	}
+
+	// Update ball y speed
+	if (y_speed_ > 0) {
+		y_speed_ += increment / 2;
+	}
+	else {
+		y_speed_ -= increment / 2;
 	}
 }
 

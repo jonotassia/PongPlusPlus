@@ -22,7 +22,7 @@ public:
 	
 	// Session data
 	PlayerNum player_num;							// Player's one or two
-	std::uniform_int_distribution<> powerup_generator{1, 6};   // Randomly selects a number of powerup
+	std::uniform_int_distribution<> powerup_generator{1, 5};   // Randomly selects a number of powerup
 	PowerUps selected_powerup{ static_cast<PowerUps>(powerup_generator(MTE)) };  // PowerUp selected by the player
 	bool serve_owner{ (player_num == PlayerNum::kOne) ? true : false };  // Serve owner set to pOne on creation
 	int points { 0 };

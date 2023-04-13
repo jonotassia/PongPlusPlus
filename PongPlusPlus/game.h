@@ -61,10 +61,12 @@ public:
 
 	// Gameplay
 	PowerUps active_powerup = PowerUps::kNone;
+	int powerup_duration{ 0 };
 	Paddle* powerup_owner = nullptr;
 
 	// Proprietary Functions
 	void Update();
+	void activatePowerup(PowerUps powerup, Paddle* paddle);
 	
 private:
 	// Game objects

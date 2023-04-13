@@ -89,11 +89,17 @@ Session::~Session() {
 }
 
 void Session::Update() {
+	// Reset powerup if duration has passed
+	if (!this->powerup_duration) {
+		this->active_powerup = PowerUps::kNone;
+	}
+	
 	// Move each object, ensuring the ball moves last to ensure that it can check for collisions
 	pPaddleOne_->Update();
 	pPaddleTwo_->Update();
 	pBall_->Update();
 	
+	// Check if a player has scored
 	if (pBall_->checkWinningPosition(pPaddleOne_)) {
 		pPaddleTwo_->getPlayer()->points++;
 		pPaddleOne_->getPlayer()->serve_owner = true;
@@ -103,5 +109,27 @@ void Session::Update() {
 		pPaddleOne_->getPlayer()->points++;
 		pPaddleTwo_->getPlayer()->serve_owner = true;
 		pGame_->resetSession();
+	}
+}
+
+/* 
+Use this method for consistent powerup handling regardless of activation source.
+	* Activates powerup
+	* Sets duration by powerup type
+*/
+void Session::activatePowerup(PowerUps powerup, Paddle* paddle) {
+	// Activate powerups
+	active_powerup = powerup;
+	paddle->powerup_available = false;
+	powerup_owner = paddle;
+
+	// Set powerup duration
+	switch (active_powerup) {
+		case(PowerUps::kNone): powerup_duration = 0; break;
+		case(PowerUps::kFire): powerup_duration = 10; break;
+		case(PowerUps::kIce): powerup_duration = 10; break;
+		case(PowerUps::kSun): powerup_duration = 5; break;
+		case(PowerUps::kShadow): powerup_duration = 3; break;
+		case(PowerUps::kConfusion): powerup_duration = 5; break;
 	}
 }

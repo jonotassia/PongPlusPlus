@@ -78,8 +78,8 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>C:\Users\jtass\vcpkg\packages\SDL2_ttf-2.20.2\include;C:\Users\jtass\vcpkg\packages\SDL2-2.26.4\include;$(IncludePath)</IncludePath>
-    <LibraryPath>C:\Users\jtass\vcpkg\packages\SDL2_ttf-2.20.2\lib\x64;C:\Users\jtass\vcpkg\packages\SDL2-2.26.4\lib\x64;$(LibraryPath)</LibraryPath>
+    <IncludePath>C:\Users\jtass\vcpkg\packages\SDL2_ttf-2.20.2\include;C:\Users\jtass\source\repos\PongPlusPlus\PongPlusPlus\include;C:\Users\jtass\vcpkg\packages\SDL2-2.26.4\include;$(IncludePath)</IncludePath>
+    <LibraryPath>C:\Users\jtass\source\repos\PongPlusPlus\PongPlusPlus\src;C:\Users\jtass\vcpkg\packages\SDL2_ttf-2.20.2\lib\x64;C:\Users\jtass\vcpkg\packages\SDL2-2.26.4\lib\x64;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
@@ -142,22 +142,25 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="ball.cpp" />
-    <ClCompile Include="contol.cpp" />
-    <ClCompile Include="game.cpp" />
-    <ClCompile Include="main.cpp" />
-    <ClCompile Include="paddle.cpp" />
-    <ClCompile Include="player.cpp" />
-    <ClCompile Include="render.cpp" />
+    <ClCompile Include="src\ball.cpp" />
+    <ClCompile Include="src\control.cpp" />
+    <ClCompile Include="src\game.cpp" />
+    <ClCompile Include="src\main.cpp" />
+    <ClCompile Include="src\paddle.cpp" />
+    <ClCompile Include="src\player.cpp" />
+    <ClCompile Include="src\render.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="ball.h" />
-    <ClInclude Include="control.h" />
-    <ClInclude Include="game.h" />
-    <ClInclude Include="definitions.h" />
-    <ClInclude Include="paddle.h" />
-    <ClInclude Include="player.h" />
-    <ClInclude Include="render.h" />
+    <ClInclude Include="headers\ball.h" />
+    <ClInclude Include="headers\control.h" />
+    <ClInclude Include="headers\definitions.h" />
+    <ClInclude Include="headers\game.h" />
+    <ClInclude Include="headers\paddle.h" />
+    <ClInclude Include="headers\player.h" />
+    <ClInclude Include="headers\render.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="CMakeLists.txt" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -9,8 +9,23 @@ set(CMAKE_CXX_FLAGS, "${CXX_FLAGS}")
 
 project(PongPlusPlus)
 
-find_file(SDL2_INCLUDE_DIR NAME SDL.h HINTS SDL2)
-find_library(SDL2_LIBRARY NAME SDL2)
+# Create an option to switch between a system sdl library and a vendored sdl library
+option(MYGAME_VENDORED "Use vendored libraries" OFF)
+
+if(MYGAME_VENDORED)
+    add_subdirectory(vendored/sdl EXCLUDE_FROM_ALL)
+else()
+    # 1. Look for a SDL2 package, 2. look for the SDL2 component and 3. fail if none can be found
+    find_package(SDL2 REQUIRED CONFIG REQUIRED COMPONENTS SDL2)
+    
+    # 1. Look for a SDL2 package, 2. Look for the SDL2maincomponent and 3. DO NOT fail when SDL2main is not available 
+    find_package(SDL2 REQUIRED CONFIG COMPONENTS SDL2main)
+
+    # Look for SDL ttf
+    find_package(SDL2_ttf REQUIRED)
+endif()
+
+include_directories(${CMAKE_SOURCE_DIR}/headers)
 
 # Create a sources variable with a link to all cpp files to compile
 set(SOURCES
@@ -25,7 +40,11 @@ set(SOURCES
 
 add_executable(${PROJECT_NAME} ${SOURCES})
 
-# Set the directories that should be included in the build command for this target
+# SDL2::SDL2main may or may not be available. It is e.g. required by Windows GUI applications  
+if(TARGET SDL2::SDL2main)
+    # It has an implicit dependency on SDL2 functions, so it MUST be added before SDL2::SDL2 (or SDL2::SDL2-static)
+    target_link_libraries(${PROJECT_NAME} PRIVATE SDL2::SDL2main)
+endif()
 
-target_link_libraries(${PROJECT_NAME} ${SDL2_LIBRARIES} ${SDL2IMAGE_LIBRARIES} ${SDL2_TTF_LIBRARIES})
- 
+# Link to the actual SDL2 library. SDL2::SDL2 is the shared SDL library, SDL2::SDL2-static is the static SDL libarary.
+target_link_libraries(${PROJECT_NAME} PRIVATE SDL2::SDL2 SDL2_ttf::SDL2_ttf)

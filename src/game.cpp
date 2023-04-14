@@ -87,7 +87,7 @@ bool Game::checkGameOver() {
 
 Session::Session(Game* pGame) : pGame_(pGame) {
 	pPaddleOne_ = new Paddle(this, pGame_->getPlayerOne(), 10);
-	pPaddleTwo_ = new Paddle(this, pGame_->getPlayerTwo(), WINDOW_WIDTH - 20);
+	pPaddleTwo_ = new Paddle(this, pGame_->getPlayerTwo(), WINDOW_WIDTH - 30);
 	pBall_ = new Ball(this);
 }
 

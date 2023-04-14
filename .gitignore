@@ -365,7 +365,4 @@ FodyWeavers.xsd
 # Project files
 .vscode
 x64
-build/CMakeFiles
-build/cmake_install.cmake
-build/CMakeCache.txt
-build/MakeFile
+build

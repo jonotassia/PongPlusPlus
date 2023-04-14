@@ -1,0 +1,3 @@
+C:/Users/jtass/source/repos/PongPlusPlus/build/CMakeFiles/PongPlusPlus.dir
+C:/Users/jtass/source/repos/PongPlusPlus/build/CMakeFiles/edit_cache.dir
+C:/Users/jtass/source/repos/PongPlusPlus/build/CMakeFiles/rebuild_cache.dir

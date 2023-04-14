@@ -363,6 +363,5 @@ MigrationBackup/
 FodyWeavers.xsd
 
 # Project files
-build
 .vscode
 x64

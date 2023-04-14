@@ -47,6 +47,9 @@ void Game::Run() {
 	}
 }
 
+/*
+Triggers updates to the session. Checks that the game is over. If it is, reset points.
+*/
 void Game::Update(bool& running) {
 	// Check if game over. If game over, reset points of both players and draw victory screen
 	if (checkGameOver()) {
@@ -58,10 +61,16 @@ void Game::Update(bool& running) {
 	pSession_->Update();
 }
 
+/*
+Resets the session object, deleting all game objects and then generating new ones.
+*/
 void Game::resetSession() {
 	pSession_.reset(new Session(this));
 }
 
+/*
+Checks if either side has won. If so, increments player wins and triggers victory screen.
+*/
 bool Game::checkGameOver() {
 	if (pPlayerOne_->points == 10) {
 		pPlayerOne_->total_wins++;
@@ -88,6 +97,80 @@ Session::~Session() {
 	delete pBall_;
 }
 
+
+// Copy constructor
+Session::Session(Session& src) {
+	// Handle non-owning references. 
+	// There should only be one game at a time, so the session should always be linked to the same game, not a duplicate of it.
+	this->pGame_ = src.pGame_;
+
+	// Handle owning references
+	*this->pPaddleOne_ = *src.pPaddleOne_;
+	*this->pPaddleTwo_ = *src.pPaddleTwo_;
+	*this->pBall_ = *src.pBall_;
+}	
+
+// Copy assignment constructor
+Session& Session::operator=(Session& src) {
+	if (&src == this) {
+		return *this;
+	}
+
+	// Handle non-owning references. 
+	// There should only be one game at a time, so the session should always be linked to the same game, not a duplicate of it.
+	this->pGame_ = src.pGame_;
+
+	// Handle owning references
+	*this->pPaddleOne_ = *src.pPaddleOne_;
+	*this->pPaddleTwo_ = *src.pPaddleTwo_;
+	*this->pBall_ = *src.pBall_;
+
+	return *this;
+}	
+
+// Move constructor
+Session::Session(Session&& src) {
+	// Handle non-owning references. 
+	// There should only be one game at a time, so the session should always be linked to the same game, not a duplicate of it.
+	this->pGame_ = src.pGame_;
+
+	// Handle owning references
+	*this->pPaddleOne_ = *src.pPaddleOne_;
+	delete src.pPaddleOne_;
+
+	*this->pPaddleTwo_ = *src.pPaddleTwo_;
+	delete src.pPaddleTwo_;
+
+	*this->pBall_ = *src.pBall_;
+	delete src.pBall_;
+}
+
+// Move assignment constructor
+Session& Session::operator=(Session&& src) {
+	if (&src == this) {
+		return *this;
+	}
+
+	// Handle owning references
+	*this->pPaddleOne_ = *src.pPaddleOne_;
+	delete src.pPaddleOne_;
+
+	*this->pPaddleTwo_ = *src.pPaddleTwo_;
+	delete src.pPaddleTwo_;
+
+	*this->pBall_ = *src.pBall_;
+	delete src.pBall_;
+
+	return *this;
+}    	
+
+/*
+Updates the session, which covers the following:
+	* Deactivate powerup if powerup duration has hit 0.
+	* Update paddles
+	* Update ball
+	* Reset session if a point has been scored.
+*/
 void Session::Update() {
 	// Reset powerup if duration has passed
 	if (!this->powerup_duration) {

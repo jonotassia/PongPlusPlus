@@ -54,6 +54,12 @@ public:
 	Session(Game* pGame);
 	~Session();
 
+	// Copy/Move functions
+	Session(Session& src);			// Copy constructor
+	Session &operator=(Session& src);		// Copy assignment constructor
+	Session(Session&& src);			// Move constructor
+	Session &operator=(Session&& src);    	// Move assignment constructor
+
 	// Getters/Setters from session class
 	Ball* getBall() { return pBall_; };
 	Paddle* getPaddleOne() { return pPaddleOne_; };

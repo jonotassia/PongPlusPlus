@@ -87,10 +87,12 @@ void Renderer::drawBackground() {
 	}
 }
 
+// Draws the net along the midline of the field of play.
 void Renderer::drawNet() {
 	SDL_RenderDrawLine(pRenderer_, WINDOW_WIDTH / 2, 0, WINDOW_WIDTH / 2, WINDOW_HEIGHT);
 }
 
+// Uses SDL_TTF to draw the score on the screen.
 void Renderer::drawScore(int score, int x, int y) {
 	TTF_Init();
 	
@@ -158,6 +160,7 @@ void Renderer::drawPaddles() {
 	SDL_RenderFillRect(pRenderer_, &paddle_two);
 }
 
+// Draws the powerup indicators at the top of the screen. This tells users whether they have a powerup available or not.
 void Renderer::drawPowerups() {
 	// Create SDL rectangles for each paddle
 	SDL_Rect powerup_one;
@@ -192,6 +195,7 @@ void Renderer::drawPowerups() {
 	
 }
 
+// Uses SDL TTF to draw a victory screen once a player wins.
 void Renderer::drawVictoryScreen(Player* winner, Player* loser) {
 	TTF_Init();
 
@@ -235,6 +239,13 @@ void Renderer::drawVictoryScreen(Player* winner, Player* loser) {
 	TTF_Quit();
 }
 
+/*
+Bundles together render functions to abstract away from gameplay loop. Includes:
+	* Setting the render color
+	* Drawing the background and powerup indicators
+	* Drawing the game objects
+	* Presenting the render
+*/
 void Renderer::drawScreen() {
 	// Clear the window to black
 	SDL_SetRenderDrawColor(pRenderer_, 0x0, 0x0, 0x0, 0xFF);

@@ -25,5 +25,5 @@ This project satisfies the following aspects of the rubric for the Udacity C++ N
   * Classes encapsulate behavior and offer an adequate level of abstraction for other developers to follow.
 * Memory Management
   * The project uses references or pointers where appropriate
-  * The session object is responsible for creating and destroying the game objects between each rally
+  * The session object is responsible for creating and destroying the game objects between each rally, with rule of 5 implemented
   * The game object has an owning reference to Players and Session objects using a Unique Pointers to handle cleanup.

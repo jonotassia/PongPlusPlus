@@ -6,6 +6,17 @@ PongPlusPlus is an in-progress experiment using C++ and SDL for game-design, ins
 
 ## Features
 
+### Interface
+
+In the below image, various game objects have been highlighted with colored boxes:
+
+![image](https://user-images.githubusercontent.com/24849659/231986672-0767b709-a752-4b7c-a3bc-eafa41e6ce16.png)
+
+* Red: The paddle zone. Paddles will move up and down along this boundary.
+* Yellow: The score board. Each side of the field has a score indicator for their respective players.
+* Pink: Ball start. This is the location where the ball will always start before being served.
+* Green: Current active powerup. Each player's powerup is displayed here by color. When used, the box becomes hollow.
+
 ### Gameplay
 
 <b>Recommended Number of Players</b>: 2

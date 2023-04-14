@@ -78,3 +78,12 @@ https://user-images.githubusercontent.com/24849659/232005111-76bd3700-243d-4ff5-
 * Serve Ball: Return (Enter) or Numpad-Enter
 
 ## Roadmap
+
+* More Powerups:
+  * Root ball
+  * Shrink ball
+  * Energy ball
+  * LOVE ball
+* Computer-controlled Player 2
+* Menus, including power-up selection
+* Stat-tracking

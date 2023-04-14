@@ -30,6 +30,9 @@ A build directory with the executable has been included for convenience, but if 
 1. Clone this repo.
 2. Make a build directory in the top level directory: `mkdir build && cd build`
 3. Compile: `cmake .. && make`
+  * NOTE: If you are compiling on Windows and want make files, you can use the `-G "Unix Makefiles"` flag.
+  * NOTE: If you are getting errors linking to SDL, you can run cmake with a pointer to the library as below:
+     `cmake .. -D CMAKE_PREFIX_PATH="C:\Users\jtass\vcpkg\packages" -G "Unix Makefiles"`
 4. Run it: `./PongPlusPlus`.
 
 ## Features

@@ -25,8 +25,6 @@ In order to run this game, you will need to install the SDL and SDL-ttf library 
 
 ### Basic Build Instructions
 
-A build directory with the executable has been included for convenience, but if you'd like to compile and run your own, please follow the steps below.
-
 1. Clone this repo.
 2. Make a build directory in the top level directory: `mkdir build && cd build`
 3. Compile: `cmake .. && make`

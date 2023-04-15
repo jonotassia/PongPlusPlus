@@ -1,6 +1,6 @@
 #include <iostream>
-#include <SDL.h>
-#include <SDL_ttf.h>
+#include "SDL2/SDL.h"
+#include "SDL2/SDL_ttf.h"
 #include <string>
 
 #include "render.h"
@@ -97,7 +97,12 @@ void Renderer::drawScore(int score, int x, int y) {
 	TTF_Init();
 	
 	// Set a font style and size
+	#if defined(WIN32) || defined(_WIN32) || defined(__WIN32) && !defined(__CYGWIN__)
 	TTF_Font* font = TTF_OpenFont("C:\\Windows\\Fonts\\Candara.ttf", 24);
+	#else
+	TTF_Font* font = TTF_OpenFont("/usr/share/fonts/truetype/abyssinica/AbyssinicaSIL-R.ttf", 24);
+	#endif
+
 	if (!font) {
 		printf(TTF_GetError());
 	}
@@ -200,7 +205,12 @@ void Renderer::drawVictoryScreen(Player* winner, Player* loser) {
 	TTF_Init();
 
 	// Set a font style and size
+	#if defined(WIN32) || defined(_WIN32) || defined(__WIN32) && !defined(__CYGWIN__)
 	TTF_Font* font = TTF_OpenFont("C:\\Windows\\Fonts\\Candara.ttf", 24);
+	#else
+	TTF_Font* font = TTF_OpenFont("/usr/share/fonts/truetype/abyssinica/AbyssinicaSIL-R.ttf", 24);
+	#endif
+
 	if (!font) {
 		printf(TTF_GetError());
 	}

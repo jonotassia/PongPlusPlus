@@ -1,4 +1,4 @@
-#include <SDL.h>
+#include "SDL2/SDL.h"
 
 #include "game.h"
 #include "control.h"
@@ -33,7 +33,7 @@ void Game::Run() {
 		SDL_Event event;
 		while (SDL_PollEvent(&event)) {
 			// Break if this is a phantom press of the button (which is automatic with letter keys)
-			if (event.key.keysym.scancode != 0) {
+			if (event.key.keysym.scancode != 0 && event.key.keysym.scancode != SDL_SCANCODE_UNKNOWN) {
 				pController_->handleInput(running, event);
 			}
 		}

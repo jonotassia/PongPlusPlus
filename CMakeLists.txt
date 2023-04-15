@@ -9,6 +9,9 @@ set(CMAKE_CXX_FLAGS, "${CXX_FLAGS}")
 
 project(PongPlusPlus)
 
+# Needed so that cmake uses our find modules.
+list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake)
+
 # Create an option to switch between a system sdl library and a vendored sdl library
 option(MYGAME_VENDORED "Use vendored libraries" OFF)
 
@@ -47,4 +50,4 @@ if(TARGET SDL2::SDL2main)
 endif()
 
 # Link to the actual SDL2 library. SDL2::SDL2 is the shared SDL library, SDL2::SDL2-static is the static SDL libarary.
-target_link_libraries(${PROJECT_NAME} PRIVATE SDL2::SDL2 SDL2_ttf::SDL2_ttf)
+target_link_libraries(${PROJECT_NAME} PRIVATE SDL2::Main SDL2::TTF)

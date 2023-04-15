@@ -1,4 +1,4 @@
-#include <SDL.h>
+#include "SDL2/SDL.h"
 
 #include "control.h"
 #include "game.h"
@@ -15,10 +15,17 @@ void Controller::handleInput(bool& running, SDL_Event& e) const {
 
 	if (e.type == SDL_QUIT) {
 		running = false;
+		return;
 	}
 	else if (e.type == SDL_KEYDOWN) {
 		// Create a pointer to the SDL key state
 		const Uint8* key_state = SDL_GetKeyboardState( NULL );
+
+		// Check escape key
+		if (key_state[SDL_SCANCODE_ESCAPE]) {
+			running = false;
+			return;
+		}
 		
 		// Check player one input
 		if (key_state[SDL_SCANCODE_W]) {

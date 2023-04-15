@@ -18,6 +18,7 @@ In order to run this game, you will need to install the SDL and SDL-ttf library 
   >Note that for Linux, an `apt` or `apt-get` installation is preferred to building from source. 
 * SDL Extensions
   * SDL True Type Fonts (TTF) - Installation instructions [here](https://lazyfoo.net/SDL_tutorials/lesson03/index.php)
+  * On linux, the preference would be to use `Sudo apt-get install libsdl2-ttf-dev`
 * gcc/g++ >= 5.4
   * Linux: gcc / g++ is installed by default on most Linux distros
   * Mac: same deal as make - [install Xcode command line tools](https://developer.apple.com/xcode/features/)
